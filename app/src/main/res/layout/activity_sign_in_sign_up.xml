@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginBottom="30dp"
         android:paddingVertical="15dp"
         android:text="@string/sign_up"
         android:backgroundTint="@color/white"
@@ -60,15 +60,17 @@
         app:layout_constraintBottom_toTopOf="@id/textviewSmallIntro"/>
 
     <ImageView
+        android:id="@+id/imageTopBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:src="@drawable/main_banner"
+        android:layout_marginTop="-30dp"
+        android:layout_marginBottom="30dp"
         android:contentDescription="@string/app_banner"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/main_banner"
         app:layout_constraintBottom_toTopOf="@id/textviewBigIntro"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:src="@drawable/app_logo_white"
@@ -76,7 +78,7 @@
         android:layout_height="wrap_content"
         android:scaleX="2.5"
         android:scaleY="2.5"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

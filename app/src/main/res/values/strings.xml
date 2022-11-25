@@ -32,4 +32,10 @@
     <string name="sign_in_sucess">Đăng nhập thành công!</string>
     <string name="sign_in_failed">Đăng nhập không thành công! Vui lòng kiểm tra lại email và mật khẩu</string>
     <string name="send_verification_email_failed">Gửi email xác thực không thành công! Vui lòng thử lại sau</string>
+    <string name="home">Trang chủ</string>
+    <string name="stores_map">Chuỗi cửa hàng</string>
+    <string name="recognize">Nhận dạng</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="profile">Tài khoản</string>
+    <string name="home_english">Home</string>
 </resources>
