@@ -1,6 +1,9 @@
 package com.example.meowee;
 
+import static com.example.meowee.MainActivity.currentUser;
+import static com.example.meowee.MainActivity.currentUserDatabaseRef;
 import static com.example.meowee.MainActivity.firebaseAuth;
+import static com.example.meowee.MainActivity.firebaseDatabase;
 import static com.example.meowee.MainActivity.firebaseUser;
 import static com.example.meowee.Tools.showToast;
 
@@ -9,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 

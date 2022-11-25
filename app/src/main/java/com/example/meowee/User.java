@@ -1,22 +1,11 @@
 package com.example.meowee;
 
 import static com.example.meowee.MainActivity.firebaseAuth;
-import static com.example.meowee.MainActivity.firebaseDatabase;
 import static com.example.meowee.MainActivity.firebaseUser;
-import static com.example.meowee.Tools.showToast;
 
-import android.content.Context;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Objects;
 
 public class User {
 

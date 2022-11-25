@@ -1,28 +1,22 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.currentUser;
 import static com.example.meowee.MainActivity.firebaseAuth;
-import static com.example.meowee.MainActivity.firebaseDatabase;
 import static com.example.meowee.MainActivity.firebaseUser;
 import static com.example.meowee.Tools.showToast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -30,9 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private final String TAG = "SignUpActivity";
 
-    private TextView goToSignIn;
     private TextInputEditText emailInput, passwordInput, nameInput, phoneNumberInput;
-    private MaterialButton submitButton;
 
     private String email, password, fullName, phoneNumber;
 
@@ -41,12 +33,12 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        goToSignIn = (TextView) findViewById(R.id.textviewSignUpGoToSignIn);
+        TextView goToSignIn = (TextView) findViewById(R.id.textviewSignUpGoToSignIn);
         emailInput = (TextInputEditText) findViewById(R.id.edittextSignUpEmail);
         passwordInput = (TextInputEditText) findViewById(R.id.edittextSignUpPassword);
         nameInput = (TextInputEditText) findViewById(R.id.edittextSignUpFullname);
         phoneNumberInput = (TextInputEditText) findViewById(R.id.edittextSignUpPhone);
-        submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
+        MaterialButton submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
 
         goToSignIn.setOnClickListener(v -> startSignInActivity());
         submitButton.setOnClickListener(v -> handleSignUpAccount());
@@ -106,11 +98,25 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
             if (task.isSuccessful()) {
+                createNewUserInDatabase(fullName, email, phoneNumber);
                 showToast(SignUpActivity.this, R.string.register_successful);
                 startSignInActivity();
-            }
+            } else showToast(SignUpActivity.this, R.string.send_verification_email_failed);
         }
     };
+
+    private void createNewUserInDatabase(String name, String email, String phoneNumber) {
+        User newUser = new User(name, phoneNumber, email);
+        newUser.saveToDatabase().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    Log.d(TAG, "Successfully saved new user to database.");
+                else
+                    Log.d(TAG, "Failed to save new user to database");
+            }
+        });
+    }
 
     private void startSignInActivity() {
         Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
