@@ -20,4 +20,15 @@
     <string name="email_address">Địa chỉ email</string>
     <string name="fullname">Họ và tên</string>
     <string name="phone_number">Số điện thoại</string>
+    <string name="invalid_email">Địa chỉ Email không hợp lệ!</string>
+    <string name="failed_to_register">Đăng kí tài khoản không thành công!\nVui lòng thử lại sau</string>
+    <string name="invalid_password">Mật khẩu không hợp lệ! Mật khẩu phải chứa ít nhất 6 kí tự và không chứa khoảng trắng</string>
+    <string name="register_successful">Đăng kí tài khoản thành công! Vui lòng kiểm tra email để xác thực tài khoản trước khi đăng nhập!</string>
+    <string name="invalid_name">Họ và tên không hợp lệ!</string>
+    <string name="invalid_phone_num">Số điện thoại không hợp lệ!</string>
+    <string name="save_user_success">Lưu thông tin người dùng thành công!</string>
+    <string name="save_user_failed">Lưu thông tin người dùng không thành công!</string>
+    <string name="you_havent_verify_email">Bạn chưa xác thực tài khoản, hãy kiểm tra email để xác thực tài khoản nhé</string>
+    <string name="sign_in_sucess">Đăng nhập thành công!</string>
+    <string name="sign_in_failed">Đăng nhập không thành công! Vui lòng kiểm tra lại email và mật khẩu</string>
 </resources>

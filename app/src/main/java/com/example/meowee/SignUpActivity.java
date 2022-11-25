@@ -1,14 +1,40 @@
 package com.example.meowee;
 
+import static com.example.meowee.MainActivity.currentUser;
+import static com.example.meowee.MainActivity.firebaseAuth;
+import static com.example.meowee.MainActivity.firebaseDatabase;
+import static com.example.meowee.MainActivity.firebaseUser;
+import static com.example.meowee.Tools.showToast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    private final String TAG = "SignUpActivity";
+
     private TextView goToSignIn;
+    private TextInputEditText emailInput, passwordInput, nameInput, phoneNumberInput;
+    private MaterialButton submitButton;
+
+    private String email, password, fullName, phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,11 +42,77 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         goToSignIn = (TextView) findViewById(R.id.textviewSignUpGoToSignIn);
+        emailInput = (TextInputEditText) findViewById(R.id.edittextSignUpEmail);
+        passwordInput = (TextInputEditText) findViewById(R.id.edittextSignUpPassword);
+        nameInput = (TextInputEditText) findViewById(R.id.edittextSignUpFullname);
+        phoneNumberInput = (TextInputEditText) findViewById(R.id.edittextSignUpPhone);
+        submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
 
-        goToSignIn.setOnClickListener(v -> startSignInActvity());
+        goToSignIn.setOnClickListener(v -> startSignInActivity());
+        submitButton.setOnClickListener(v -> handleSignUpAccount());
     }
 
-    private void startSignInActvity() {
+    private boolean checkInputRequirements() {
+
+        if (!Tools.emailPatternValidate(email)) {
+            showToast(this, R.string.invalid_email);
+            return false;
+        }
+
+        if (!Tools.checkValidPassword(password)) {
+            showToast(this, R.string.invalid_password);
+            return false;
+        }
+
+        if (!Tools.checkValidName(fullName)) {
+            showToast(this, R.string.invalid_name);
+            return false;
+        }
+
+        if (!Tools.checkValidPhoneNumber(phoneNumber)) {
+            showToast(this, R.string.invalid_phone_num);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void handleSignUpAccount() {
+        email = Objects.requireNonNull(emailInput.getText()).toString();
+        password = Objects.requireNonNull(passwordInput.getText()).toString();
+        fullName = Objects.requireNonNull(nameInput.getText()).toString();
+        phoneNumber = Objects.requireNonNull(phoneNumberInput.getText()).toString();
+
+        if (checkInputRequirements())
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, onCreateAccountCompleteListener);
+    }
+
+    private final OnCompleteListener<AuthResult> onCreateAccountCompleteListener = new OnCompleteListener<AuthResult>() {
+        @Override
+        public void onComplete(@NonNull Task<AuthResult> task) {
+            if (task.isSuccessful()) {
+                firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null)
+                    firebaseUser.sendEmailVerification()
+                            .addOnCompleteListener(onSendVerificationEmailComplete);
+            } else {
+                showToast(SignUpActivity.this, R.string.failed_to_register);
+            }
+        }
+    };
+
+    private final OnCompleteListener<Void> onSendVerificationEmailComplete = new OnCompleteListener<Void>() {
+        @Override
+        public void onComplete(@NonNull Task<Void> task) {
+            if (task.isSuccessful()) {
+                showToast(SignUpActivity.this, R.string.register_successful);
+                startSignInActivity();
+            }
+        }
+    };
+
+    private void startSignInActivity() {
         Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
