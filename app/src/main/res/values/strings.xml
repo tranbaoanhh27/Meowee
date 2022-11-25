@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Meowee</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <string name="tra_cuu_meo">Tra cứu mèo</string>
+    <string name="tracuu">Tra Cứu Mèo</string>
+    <string name="take_cam">Chụp ảnh</string>
+    <string name="choose_img">Chọn ảnh</string>
+    <string name="notifi_res">Chúng tôi cho rằng đến 85% đây là một con</string>
+    <string name="predict_res">Mèo anh lông trắng</string>
+    <string name="buy_now">Mua luôn!</string>
 </resources>
