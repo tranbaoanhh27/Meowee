@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Meowee</string>
+    <string name="app_banner">App Banner</string>
+    <string name="app_logo">App Logo</string>
+    <string name="sign_up">Đăng kí</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="small_intro">Chúng tôi cung cấp đa dạng các loại mèo vô cùng đáng yêu và sang chảnh cho bạn.</string>
+    <string name="big_intro">Ở Meowee, khách hàng mới là hoàng thượng!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_to">Chào mừng đến với</string>
+    <string name="meowee">MEOWEE</string>
+    <string name="dont_have_account">Chưa có tài khoản?</string>
+    <string name="enter_your_email">Nhập địa chỉ email của bạn</string>
+    <string name="email_example">example@company.com</string>
+    <string name="enter_password">Nhập mật khẩu</string>
+    <string name="password">Mật khẩu</string>
+    <string name="forgotPassword">Quên mật khẩu?</string>
+    <string name="already_have_account">Đã có tài khoản?</string>
+    <string name="email_address">Địa chỉ email</string>
+    <string name="fullname">Họ và tên</string>
+    <string name="phone_number">Số điện thoại</string>
 </resources>
