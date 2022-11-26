@@ -1,6 +1,7 @@
 package com.example.meowee;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -24,8 +25,7 @@ public class Tools {
     }
 
     public static boolean checkValidName(String name) {
-        String[] tokens = name.split("\\s+");
-        return tokens.length >= 1;
+        return !TextUtils.isEmpty(name);
     }
 
     public static boolean checkValidPhoneNumber(String phoneNumber) {

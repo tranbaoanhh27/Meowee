@@ -212,4 +212,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textinputlayoutSignUpPassword" />
 
+    <ProgressBar
+        android:id="@+id/progressbar_signup"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/buttonSignUpSubmit"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSignUpSubmit"
+        app:layout_constraintEnd_toEndOf="@id/buttonSignUpSubmit"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

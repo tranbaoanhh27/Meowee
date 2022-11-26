@@ -7,6 +7,7 @@ import static com.example.meowee.Tools.showToast;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
     private final String TAG = "SignUpActivity";
 
     private TextInputEditText emailInput, passwordInput, nameInput, phoneNumberInput;
+    private ProgressBar progressBarSignUp;
 
     private String email, password, fullName, phoneNumber;
 
@@ -39,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         nameInput = (TextInputEditText) findViewById(R.id.edittextSignUpFullname);
         phoneNumberInput = (TextInputEditText) findViewById(R.id.edittextSignUpPhone);
         MaterialButton submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
+        progressBarSignUp = (ProgressBar) findViewById(R.id.progressbar_signup);
 
         goToSignIn.setOnClickListener(v -> startSignInActivity());
         submitButton.setOnClickListener(v -> handleSignUpAccount());
@@ -48,11 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!Tools.emailPatternValidate(email)) {
             showToast(this, R.string.invalid_email);
-            return false;
-        }
-
-        if (!Tools.checkValidPassword(password)) {
-            showToast(this, R.string.invalid_password);
             return false;
         }
 
@@ -66,6 +64,11 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
 
+        if (!Tools.checkValidPassword(password)) {
+            showToast(this, R.string.invalid_password);
+            return false;
+        }
+
         return true;
     }
 
@@ -75,9 +78,11 @@ public class SignUpActivity extends AppCompatActivity {
         fullName = Objects.requireNonNull(nameInput.getText()).toString();
         phoneNumber = Objects.requireNonNull(phoneNumberInput.getText()).toString();
 
-        if (checkInputRequirements())
+        if (checkInputRequirements()) {
+            progressBarSignUp.setVisibility(ProgressBar.VISIBLE);
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, onCreateAccountCompleteListener);
+        }
     }
 
     private final OnCompleteListener<AuthResult> onCreateAccountCompleteListener = new OnCompleteListener<AuthResult>() {
@@ -89,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
                     firebaseUser.sendEmailVerification()
                             .addOnCompleteListener(onSendVerificationEmailComplete);
             } else {
+                progressBarSignUp.setVisibility(ProgressBar.GONE);
                 showToast(SignUpActivity.this, R.string.failed_to_register);
             }
         }
@@ -99,9 +105,13 @@ public class SignUpActivity extends AppCompatActivity {
         public void onComplete(@NonNull Task<Void> task) {
             if (task.isSuccessful()) {
                 createNewUserInDatabase(fullName, email, phoneNumber);
+                progressBarSignUp.setVisibility(ProgressBar.GONE);
                 showToast(SignUpActivity.this, R.string.register_successful);
                 startSignInActivity();
-            } else showToast(SignUpActivity.this, R.string.send_verification_email_failed);
+            } else {
+                progressBarSignUp.setVisibility(ProgressBar.GONE);
+                showToast(SignUpActivity.this, R.string.send_verification_email_failed);
+            }
         }
     };
 

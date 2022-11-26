@@ -12,8 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +38,7 @@ public class SignInActivity extends AppCompatActivity {
     private TextView goToSignUp, forgotPassword;
     private TextInputEditText emailInput, passwordInput;
     private MaterialButton submitButton;
+    private ProgressBar progressBarSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +50,58 @@ public class SignInActivity extends AppCompatActivity {
         emailInput = (TextInputEditText) findViewById(R.id.edittextSignInEmail);
         passwordInput = (TextInputEditText) findViewById(R.id.edittextSignInPassword);
         submitButton = (MaterialButton) findViewById(R.id.buttonSignInSubmit);
+        progressBarSignIn = (ProgressBar) findViewById(R.id.progressbar_login);
 
         goToSignUp.setOnClickListener(v -> startSignUpActivity());
         submitButton.setOnClickListener(v -> handleSignInSubmit());
+        forgotPassword.setOnClickListener(v -> handleResetPassword());
+    }
+
+    private void handleResetPassword() {
+        String email = Objects.requireNonNull(emailInput.getText()).toString();
+        if (TextUtils.isEmpty(email))
+            showToast(this, R.string.enter_email_and_we_will_help_you_reset_password);
+        else if (!Tools.emailPatternValidate(email))
+            showToast(SignInActivity.this, R.string.email_seem_like_incorrect_please_check);
+        else {
+            firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        String message = String.format(
+                                "Chúng tôi đã gửi email đến địa chỉ %s, hãy kiểm tra email và đặt lại mật khẩu nhé!",
+                                email
+                        );
+                        Toast.makeText(SignInActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
 
     private void handleSignInSubmit() {
-        String email = Objects.requireNonNull(emailInput.getText()).toString();
-        String password = Objects.requireNonNull(passwordInput.getText()).toString();
+        String email, password;
+        email = Objects.requireNonNull(emailInput.getText()).toString();
+        password = Objects.requireNonNull(passwordInput.getText()).toString();
 
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(onSignInComplete);
+        boolean validInputs = !email.equals("") && !password.equals("");
+
+        if (!validInputs)
+            showToast(this, R.string.dont_let_email_password_empty);
+        else {
+            progressBarSignIn.setVisibility(ProgressBar.VISIBLE);
+            if (firebaseAuth != null)
+                firebaseAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(onSignInComplete);
+            else
+                Log.d(TAG, "handleSignInSubmit: firebaseAuth is null");
+        }
     }
 
     private final OnCompleteListener<AuthResult> onSignInComplete = new OnCompleteListener<AuthResult>() {
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {
+            progressBarSignIn.setVisibility(ProgressBar.GONE);
             if (task.isSuccessful()) {
                 firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {

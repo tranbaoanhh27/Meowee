@@ -101,7 +101,7 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/textviewSignInWelcomeMessage"
         app:layout_constraintTop_toBottomOf="@id/textinputlayoutSignInEmail" />
-    
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textinputlayoutSignInPassword"
         android:layout_width="match_parent"
@@ -145,5 +145,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textviewSignInForgetPassword" />
+
+    <ProgressBar
+        android:id="@+id/progressbar_login"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/buttonSignInSubmit"
+        app:layout_constraintEnd_toEndOf="@id/buttonSignInSubmit"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSignInSubmit"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

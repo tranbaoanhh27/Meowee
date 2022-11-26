@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,11 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
     // UI Elements
     private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
+    private Fragment fragmentHome, fragmentMap, fragmentFavorites, fragmentProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fragmentHome = new ProductListFragment();
+        fragmentMap = new MapFragment();
+        fragmentFavorites = new FavoritesFragment();
+        fragmentProfile = new ProfileFragment();
 
         buttonHome = findViewById(R.id.bottomNavBarButtonHome);
         buttonMap = findViewById(R.id.bottomNavBarButtonMap);
@@ -49,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
         buttonFavorite.setOnClickListener(onBottomNavBarButtonClicked);
         buttonProfile.setOnClickListener(onBottomNavBarButtonClicked);
 
+        setUpDefaultFragment();
+
+    }
+
+    private void setUpDefaultFragment() {
+        resetSelectedBottomNavbarButton();
+        buttonHome.setImageResource(R.drawable.home_selected);
+        switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
     }
 
     private final View.OnClickListener onBottomNavBarButtonClicked = new View.OnClickListener() {
@@ -59,15 +74,19 @@ public class MainActivity extends AppCompatActivity {
             if (viewId == R.id.bottomNavBarButtonHome) {
                 Log.d(TAG, "Home button clicked!");
                 buttonHome.setImageResource(R.drawable.home_selected);
+                switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
             } else if (viewId == R.id.bottomNavBarButtonMap) {
                 Log.d(TAG, "Map button clicked!");
                 buttonMap.setImageResource(R.drawable.map_selected);
+                switchFragment(R.id.fragmentcontainerMainActivity, fragmentMap);
             } else if (viewId == R.id.bottomNavBarButtonFavorite) {
                 Log.d(TAG, "Favorite button clicked!");
                 buttonFavorite.setImageResource(R.drawable.favorite_selected);
+                switchFragment(R.id.fragmentcontainerMainActivity, fragmentFavorites);
             } else if (viewId == R.id.bottomNavBarButtonProfile) {
                 Log.d(TAG, "Profile button clicked!");
                 buttonProfile.setImageResource(R.drawable.profile_selected);
+                switchFragment(R.id.fragmentcontainerMainActivity, fragmentProfile);
             } else {
                 Log.d(TAG, "Don't know which button clicked!");
             }
@@ -122,5 +141,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         // TODO: Update greeting to new name
+    }
+
+    private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(fragmentContainerResourceId, fragmentObject)
+                .commit();
     }
 }
