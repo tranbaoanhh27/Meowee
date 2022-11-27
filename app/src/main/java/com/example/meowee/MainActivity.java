@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 Cat.allCats.add(dataSnapshot.getValue(Cat.class));
             }
             fragmentHome.notifyAdapter();
+            fragmentHome.progressBar.setVisibility(ProgressBar.GONE);
         }
 
         @Override

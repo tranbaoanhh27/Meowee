@@ -21,7 +21,7 @@ public class ProductListFragment extends Fragment {
     // UI Elements
     private TextView usernameView;
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    ProgressBar progressBar;
     private final CatHomeAdapter adapter = new CatHomeAdapter();
 
     public ProductListFragment() {
@@ -39,7 +39,7 @@ public class ProductListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_product_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
         usernameView = (TextView) view.findViewById(R.id.textview_greeting);
         if (currentUser != null) {
@@ -51,12 +51,13 @@ public class ProductListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar_home_fragment);
+        if (adapter.getItemCount() == 0)
+            progressBar.setVisibility(ProgressBar.VISIBLE);
         return view;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void notifyAdapter() {
-        progressBar.setVisibility(ProgressBar.GONE);
         adapter.notifyDataSetChanged();
     }
 }
