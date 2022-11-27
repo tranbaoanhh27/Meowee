@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,19 +22,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "WTF!MainActivity";
 
     public static FirebaseAuth firebaseAuth;
     public static FirebaseUser firebaseUser;
     public static FirebaseDatabase firebaseDatabase;
     public static User currentUser;
-    public static DatabaseReference currentUserDatabaseRef;
+    public static DatabaseReference currentUserDatabaseRef, allCatsDatabaseRef;
 
     // UI Elements
     private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
-    private Fragment fragmentHome, fragmentMap, fragmentFavorites, fragmentProfile;
+    private Fragment fragmentMap, fragmentFavorites, fragmentProfile;
+    private ProductListFragment fragmentHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,18 +115,21 @@ public class MainActivity extends AppCompatActivity {
             Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
             startActivity(signInSignUpIntent);
         } else {
-            initCurrentUser();
+            initDatabaseRef();
             if (currentUser != null) {
                 Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void initCurrentUser() {
+    private void initDatabaseRef() {
         currentUserDatabaseRef = firebaseDatabase
                 .getReference("Users")
                 .child(firebaseUser.getUid());
         currentUserDatabaseRef.addValueEventListener(onCurrentUserDataChanged);
+        allCatsDatabaseRef = firebaseDatabase
+                .getReference("Cats");
+        allCatsDatabaseRef.addValueEventListener(onCatsDataChanged);
     }
 
     private final ValueEventListener onCurrentUserDataChanged = new ValueEventListener() {
@@ -139,13 +146,32 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final ValueEventListener onCatsDataChanged = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            Log.d(TAG, "All cats database changed.");
+            Cat.allCats = new ArrayList<>();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                Cat.allCats.add(dataSnapshot.getValue(Cat.class));
+            }
+            fragmentHome.notifyAdapter();
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.d(TAG, error.toString());
+        }
+    };
+
     private void updateUI() {
-        // TODO: Update greeting to new name
+        TextView userNameGreeting = findViewById(R.id.textview_greeting);
+        userNameGreeting.setText(String.format("Hi, %s", currentUser.getFullName()));
     }
 
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
         getSupportFragmentManager().beginTransaction()
                 .replace(fragmentContainerResourceId, fragmentObject)
+                .addToBackStack(null)
                 .commit();
     }
 }
