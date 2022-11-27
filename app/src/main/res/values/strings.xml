@@ -41,4 +41,10 @@
     <string name="dont_let_email_password_empty">Không được để trống email hay mật khẩu!</string>
     <string name="enter_email_and_we_will_help_you_reset_password">Đừng lo lắng! Hãy nhập địa chỉ email và chúng tôi sẽ giúp bạn!</string>
     <string name="email_seem_like_incorrect_please_check">Địa chỉ email có vẻ không đúng, bạn vui lòng kiểm tra lại nhé!</string>
+    <string name="hi">Hi</string>
+    <string name="let_see_what_we_have">Xem chúng tôi có gì này!</string>
+    <string name="cart">cart</string>
+    <string name="filter">filter</string>
+    <string name="catimage">Cat Image</string>
+    <string name="cat_type">Phân loại:</string>
 </resources>
