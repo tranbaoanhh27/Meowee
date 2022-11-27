@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".SignInActivity">
+
+    <TextView
+        android:id="@+id/textviewSignInWelcomeMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/welcome_to"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageviewSignInBrandLogo"
+        android:layout_width="138dp"
+        android:layout_height="36dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/meowee"
+        app:layout_constraintStart_toStartOf="@id/textviewSignInWelcomeMessage"
+        app:layout_constraintTop_toBottomOf="@id/textviewSignInWelcomeMessage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/dont_have_account"
+        android:textColor="@color/gray"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textviewSignInWelcomeMessage" />
+
+    <TextView
+        android:id="@+id/textviewSignInGoToSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/sign_up"
+        android:textColor="#0088EC"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textviewSignInWelcomeMessage" />
+
+    <ImageView
+        android:id="@+id/imageviewSignInSignInTitle"
+        android:layout_width="177dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/sign_in"
+        android:src="@drawable/sign_in"
+        app:layout_constraintStart_toStartOf="@id/imageviewSignInBrandLogo"
+        app:layout_constraintTop_toBottomOf="@id/imageviewSignInBrandLogo" />
+
+    <TextView
+        android:id="@+id/textviewSignInEmailInputTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/enter_your_email"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/textviewSignInWelcomeMessage"
+        app:layout_constraintTop_toBottomOf="@id/imageviewSignInSignInTitle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinputlayoutSignInEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Material3.Light"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@id/textviewSignInEmailInputTitle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittextSignInEmail"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="emailAddress"
+            android:textSize="16sp"
+            android:inputType="textEmailAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textviewSignInPasswordInputTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/enter_password"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/textviewSignInWelcomeMessage"
+        app:layout_constraintTop_toBottomOf="@id/textinputlayoutSignInEmail" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinputlayoutSignInPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        android:theme="@style/Theme.Material3.Light"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/textviewSignInPasswordInputTitle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittextSignInPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:textSize="18sp"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textviewSignInForgetPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/forgotPassword"
+        android:textSize="16sp"
+        android:textColor="#0088EC"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/textinputlayoutSignInPassword"
+        app:layout_constraintTop_toBottomOf="@id/textinputlayoutSignInPassword" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSignInSubmit"
+        android:layout_width="272dp"
+        android:layout_height="54dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/black"
+        android:text="@string/sign_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textviewSignInForgetPassword" />
+
+    <ProgressBar
+        android:id="@+id/progressbar_login"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/buttonSignInSubmit"
+        app:layout_constraintEnd_toEndOf="@id/buttonSignInSubmit"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSignInSubmit"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

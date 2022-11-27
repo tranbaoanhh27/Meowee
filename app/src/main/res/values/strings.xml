@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">Meowee</string>
+    <string name="app_banner">App Banner</string>
+    <string name="app_logo">App Logo</string>
+    <string name="sign_up">Đăng kí</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="small_intro">Chúng tôi cung cấp đa dạng các loại mèo vô cùng đáng yêu và sang chảnh cho bạn.</string>
+    <string name="big_intro">Ở Meowee, khách hàng mới là hoàng thượng!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_to">Chào mừng đến với</string>
+    <string name="meowee">MEOWEE</string>
+    <string name="dont_have_account">Chưa có tài khoản?</string>
+    <string name="enter_your_email">Nhập địa chỉ email của bạn</string>
+    <string name="email_example">example@company.com</string>
+    <string name="enter_password">Nhập mật khẩu</string>
+    <string name="password">Mật khẩu</string>
+    <string name="forgotPassword">Quên mật khẩu?</string>
+    <string name="already_have_account">Đã có tài khoản?</string>
+    <string name="email_address">Địa chỉ email</string>
+    <string name="fullname">Họ và tên</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="invalid_email">Địa chỉ Email không hợp lệ!</string>
+    <string name="failed_to_register">Đăng kí tài khoản không thành công!\nCó thể email này đã được sử dụng</string>
+    <string name="invalid_password">Mật khẩu không hợp lệ! Mật khẩu phải chứa ít nhất 6 kí tự và không chứa khoảng trắng</string>
+    <string name="register_successful">Đăng kí tài khoản thành công! Vui lòng kiểm tra email để xác thực tài khoản trước khi đăng nhập!</string>
+    <string name="invalid_name">Họ và tên không hợp lệ!</string>
+    <string name="invalid_phone_num">Số điện thoại không hợp lệ!</string>
+    <string name="save_user_success">Lưu thông tin người dùng thành công!</string>
+    <string name="save_user_failed">Lưu thông tin người dùng không thành công!</string>
+    <string name="you_havent_verify_email">Bạn chưa xác thực tài khoản, hãy kiểm tra email để xác thực tài khoản nhé</string>
+    <string name="sign_in_sucess">Đăng nhập thành công!</string>
+    <string name="sign_in_failed">Đăng nhập không thành công! Vui lòng kiểm tra lại email và mật khẩu</string>
+    <string name="send_verification_email_failed">Gửi email xác thực không thành công! Vui lòng thử lại sau</string>
+    <string name="home">Trang chủ</string>
+    <string name="stores_map">Chuỗi cửa hàng</string>
+    <string name="recognize">Nhận dạng</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="profile">Tài khoản</string>
+    <string name="home_english">Home</string>
+    <string name="dont_let_email_password_empty">Không được để trống email hay mật khẩu!</string>
+    <string name="enter_email_and_we_will_help_you_reset_password">Đừng lo lắng! Hãy nhập địa chỉ email và chúng tôi sẽ giúp bạn!</string>
+    <string name="email_seem_like_incorrect_please_check">Địa chỉ email có vẻ không đúng, bạn vui lòng kiểm tra lại nhé!</string>
 </resources>

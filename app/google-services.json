@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "149956728767",
+    "firebase_url": "https://meowee-e81b7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "meowee-e81b7",
+    "storage_bucket": "meowee-e81b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149956728767:android:8756a2e8b70307fff1730a",
+        "android_client_info": {
+          "package_name": "com.example.meowee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149956728767-gv0vuq41q4d2o2so0h8dcka3t1mgk0h8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meowee",
+            "certificate_hash": "0d1c2538a068b1b5fcf5a8816010ed8036fdf529"
+          }
+        },
+        {
+          "client_id": "149956728767-9gj3o7rviifepe22q16vbpo76ftppbu8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg66zUtwfuKgIqHlJeFMY3suqCOSdxXyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149956728767-9gj3o7rviifepe22q16vbpo76ftppbu8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
