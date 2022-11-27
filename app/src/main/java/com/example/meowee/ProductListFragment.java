@@ -1,30 +1,18 @@
 package com.example.meowee;
 
 import static com.example.meowee.MainActivity.currentUser;
-import static com.example.meowee.MainActivity.firebaseDatabase;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductListFragment extends Fragment {
 
@@ -33,6 +21,7 @@ public class ProductListFragment extends Fragment {
     // UI Elements
     private TextView usernameView;
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
     private final CatHomeAdapter adapter = new CatHomeAdapter();
 
     public ProductListFragment() {
@@ -60,11 +49,14 @@ public class ProductListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_home);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar_home_fragment);
         return view;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void notifyAdapter() {
+        progressBar.setVisibility(ProgressBar.GONE);
         adapter.notifyDataSetChanged();
     }
 }

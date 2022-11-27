@@ -87,4 +87,14 @@
         app:layout_constraintTop_toBottomOf="@id/searchview_home"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressbar_home_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/recyclerview_home"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerview_home"
+        app:layout_constraintStart_toStartOf="@id/recyclerview_home"
+        app:layout_constraintEnd_toEndOf="@id/recyclerview_home"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
