@@ -57,6 +57,9 @@ public class PasswordResetActivity extends AppCompatActivity {
                         );
                         Toast.makeText(PasswordResetActivity.this, message, Toast.LENGTH_LONG).show();
                         PasswordResetActivity.this.finish();
+                    } else {
+                        String message = "Không thể gửi email, bạn nên kiểm tra lại kết nối internet và thử lại!";
+                        Toast.makeText(PasswordResetActivity.this, message, Toast.LENGTH_LONG).show();
                     }
                 }
             });

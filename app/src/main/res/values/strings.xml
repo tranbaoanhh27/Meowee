@@ -30,7 +30,7 @@
     <string name="save_user_failed">Lưu thông tin người dùng không thành công!</string>
     <string name="you_havent_verify_email">Bạn chưa xác thực tài khoản, hãy kiểm tra email để xác thực tài khoản nhé</string>
     <string name="sign_in_sucess">Đăng nhập thành công!</string>
-    <string name="sign_in_failed">Đăng nhập không thành công! Vui lòng kiểm tra lại email và mật khẩu</string>
+    <string name="sign_in_failed">Đăng nhập không thành công! Vui lòng đảm bảo kết nối internet và kiểm tra lại email, mật khẩu</string>
     <string name="send_verification_email_failed">Gửi email xác thực không thành công! Vui lòng thử lại sau</string>
     <string name="home">Trang chủ</string>
     <string name="stores_map">Chuỗi cửa hàng</string>
@@ -48,4 +48,8 @@
     <string name="catimage">Cat Image</string>
     <string name="cat_type">Phân loại:</string>
     <string name="confirm">Xác nhận</string>
+    <string name="try_connect_again">Thử kết nối lại</string>
+    <string name="please_check_your_internet">Thử kiểm tra lại kết nối internet đi bà dà!</string>
+    <string name="oops_no_internet">Oops! Hông có kết nối!</string>
+    <string name="still_no_internet"><![CDATA[Vẫn chưa có kết nối internet :<]]></string>
 </resources>
