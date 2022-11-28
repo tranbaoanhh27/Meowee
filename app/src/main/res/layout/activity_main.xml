@@ -6,13 +6,86 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentcontainerMainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+        android:name="com.example.meowee.ProductListFragment"
+        tools:layout="@layout/fragment_product_list" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_nav_bar"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/bottomNavBarButtonHome"
+            android:src="@drawable/home_unselected"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            android:contentDescription="@string/home_english"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bottomNavBarButtonMap"/>
+
+        <ImageButton
+            android:id="@+id/bottomNavBarButtonMap"
+            android:src="@drawable/map_unselected"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            app:layout_constraintStart_toEndOf="@id/bottomNavBarButtonHome"
+            app:layout_constraintEnd_toStartOf="@id/bottomNavBarButtonCamera"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
+            android:id="@+id/bottomNavBarButtonCamera"
+            android:src="@drawable/camera"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/bottomNavBarButtonFavorite"
+            app:layout_constraintStart_toEndOf="@id/bottomNavBarButtonMap"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/bottomNavBarButtonFavorite"
+            android:src="@drawable/favorite_unselected"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            app:layout_constraintEnd_toStartOf="@id/bottomNavBarButtonProfile"
+            app:layout_constraintStart_toEndOf="@id/bottomNavBarButtonCamera"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/bottomNavBarButtonProfile"
+            android:src="@drawable/profile_unselected"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottomNavBarButtonFavorite"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

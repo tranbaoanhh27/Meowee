@@ -13,43 +13,39 @@
         android:theme="@style/Theme.Meowee"
         tools:targetApi="31">
         <activity
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:name=".MainActivity"
-            android:exported="false"
-            >
-
+            android:name=".SignUpActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:name=".CatClassifyActivity"
-            android:exported="true"
-            >
-
+            android:name=".SignInActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".SignInSignUpActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".UserProfileActivity"
-            android:exported="true"
-            >
 
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
     </application>
-    <uses-feature android:name="android.hardware.camera" android:required="true">
-
-    </uses-feature>
 
 </manifest>
