@@ -26,7 +26,7 @@ public class ProductListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     ProgressBar progressBar;
-    private final CatHomeAdapter adapter = new CatHomeAdapter(Cat.allCats);
+    private CatHomeAdapter adapter;
 
     public ProductListFragment() {
         // Required empty public constructor
@@ -50,6 +50,7 @@ public class ProductListFragment extends Fragment {
             usernameView.setText(String.format("Hi, %s", currentUser.getFullName()));
         }
 
+        adapter = new CatHomeAdapter(view.getContext(), Cat.allCats);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_home);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

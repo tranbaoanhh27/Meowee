@@ -52,4 +52,15 @@
     <string name="please_check_your_internet">Thử kiểm tra lại kết nối internet đi bà dà!</string>
     <string name="oops_no_internet">Oops! Hông có kết nối!</string>
     <string name="still_no_internet"><![CDATA[Vẫn chưa có kết nối internet :<]]></string>
+    <string name="this_is_cat_name">This is cat name</string>
+    <string name="button_minus_quantity">Button Minus Quantity</string>
+    <string name="button_add_quantity">Button Add Quantity</string>
+    <string name="age">Độ tuổi:</string>
+    <string name="color">Màu lông:</string>
+    <string name="sex">Giới tính:</string>
+    <string name="more_info">Thông tin thêm:</string>
+    <string name="button_add_to_favorite">Button Add to favorite</string>
+    <string name="add_to_cart">Thêm vào giỏ hàng</string>
+    <string name="added_to_favorites">Đã thêm vào danh sách yêu thích</string>
+    <string name="removed_from_favorites">Đã xoá khỏi danh sách yêu thích</string>
 </resources>

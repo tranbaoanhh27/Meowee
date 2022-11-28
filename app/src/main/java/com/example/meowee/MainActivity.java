@@ -1,7 +1,6 @@
 package com.example.meowee;
 
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -32,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseAuth firebaseAuth;
     public static FirebaseUser firebaseUser;
     public static FirebaseDatabase firebaseDatabase;
+    public static FirebaseStorage firebaseStorage;
     public static User currentUser;
     public static DatabaseReference currentUserDatabaseRef, allCatsDatabaseRef;
 
@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
 
         fragmentHome = new ProductListFragment();
         fragmentMap = new MapFragment();
@@ -112,18 +116,12 @@ public class MainActivity extends AppCompatActivity {
         if (!Tools.isOnline())
             startActivity(new Intent(this, NoInternetActivity.class));
         else {
-            firebaseAuth = FirebaseAuth.getInstance();
-            firebaseDatabase = FirebaseDatabase.getInstance();
-
             firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser == null) {
                 Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
                 startActivity(signInSignUpIntent);
             } else {
                 initDatabaseRefs();
-                if (currentUser != null) {
-                    Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
-                }
             }
         }
     }
