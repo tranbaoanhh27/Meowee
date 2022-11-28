@@ -1,5 +1,6 @@
 package com.example.meowee;
 
+import static com.example.meowee.MainActivity.currentUser;
 import static com.example.meowee.MainActivity.firebaseStorage;
 
 import android.annotation.SuppressLint;
@@ -13,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,14 +26,14 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHolder> {
+public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
 
-    private final String TAG = "SOS!CatHomeAdapter";
+    private final String TAG = "SOS!CatAdapter";
 
     private ArrayList<Cat> cats;
     private Context context;
 
-    public CatHomeAdapter(Context context, ArrayList<Cat> cats) {
+    public CatAdapter(Context context, ArrayList<Cat> cats) {
         this.context = context;
         this.setCats(cats);
     }
@@ -123,6 +122,16 @@ public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHold
                 if (cat.hasNameSimilarTo(queryText))
                     this.cats.add(cat.clone());
             }
+        }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterByFavorite() {
+        this.cats.clear();
+        for (Cat cat : Cat.allCats) {
+            if (currentUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())))
+                this.cats.add(cat.clone());
         }
         notifyDataSetChanged();
     }
