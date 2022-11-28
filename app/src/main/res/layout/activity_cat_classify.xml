@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".CatClassifyActivity">
 
     <ImageView
@@ -66,7 +67,7 @@
         android:src="@drawable/img_cat"
         app:layout_constraintBottom_toTopOf="@+id/tv_notifi_res"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_camera" />
 
@@ -80,7 +81,7 @@
         android:text="@string/take_cam"
         app:layout_constraintBottom_toTopOf="@+id/imgview_cat"
         app:layout_constraintEnd_toStartOf="@+id/btn_choose_img"
-        app:layout_constraintHorizontal_bias="0.58"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgview_back" />
 
@@ -91,6 +92,7 @@
         android:text="@string/notifi_res"
         android:textSize="15dp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/tv_res"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
