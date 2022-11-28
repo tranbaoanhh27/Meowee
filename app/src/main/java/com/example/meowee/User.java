@@ -10,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class User {
 
     @Exclude
-    private static final String TAG = "WTF!User";
+    private static final String TAG = "SOS!User";
 
     private String fullName, phoneNumber, address, email;
 

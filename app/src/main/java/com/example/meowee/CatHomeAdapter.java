@@ -1,6 +1,7 @@
 package com.example.meowee;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHolder> {
+
+    private ArrayList<Cat> cats;
+
+    public CatHomeAdapter(ArrayList<Cat> cats) {
+        this.setCats(cats);
+    }
+
+    public void setCats(ArrayList<Cat> cats) {
+        this.cats = new ArrayList<Cat>();
+        for (Cat cat : cats) {
+            this.cats.add(cat.clone());
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -23,7 +40,7 @@ public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            Cat cat = Cat.allCats.get(position);
+            Cat cat = cats.get(position);
             holder.nameView.setText(cat.getName());
             holder.priceView.setText(String.format("%d đ", cat.getPrice()));
             holder.typesView.setText(String.format("Mèo %s, Mèo %s, Màu %s",
@@ -37,7 +54,7 @@ public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return Cat.allCats.size();
+        return cats.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,5 +68,19 @@ public class CatHomeAdapter extends RecyclerView.Adapter<CatHomeAdapter.ViewHold
             priceView = (TextView) itemView.findViewById(R.id.textview_catprice_home_itemview);
             typesView = (TextView) itemView.findViewById(R.id.textview_cattype_home_itemview);
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterByName(String queryText) {
+        this.cats.clear();
+        if (TextUtils.isEmpty(queryText))
+            this.setCats(Cat.allCats);
+        else {
+            for (Cat cat : Cat.allCats) {
+                if (cat.hasNameSimilarTo(queryText))
+                    this.cats.add(cat.clone());
+            }
+        }
+        notifyDataSetChanged();
     }
 }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "WTF!MainActivity";
+    private static final String TAG = "SOS!MainActivity";
 
     public static FirebaseAuth firebaseAuth;
     public static FirebaseUser firebaseUser;
@@ -116,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
             Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
             startActivity(signInSignUpIntent);
         } else {
-            initDatabaseRef();
+            initDatabaseRefs();
             if (currentUser != null) {
                 Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void initDatabaseRef() {
+    private void initDatabaseRefs() {
         currentUserDatabaseRef = firebaseDatabase
                 .getReference("Users")
                 .child(firebaseUser.getUid());
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                 Cat.allCats.add(dataSnapshot.getValue(Cat.class));
             }
-            fragmentHome.notifyAdapter();
+            fragmentHome.notifyAdapter(Cat.allCats);
             fragmentHome.progressBar.setVisibility(ProgressBar.GONE);
         }
 
