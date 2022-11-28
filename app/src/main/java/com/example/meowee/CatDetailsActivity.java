@@ -3,6 +3,7 @@ package com.example.meowee;
 import static com.example.meowee.MainActivity.currentUser;
 import static com.example.meowee.MainActivity.currentUserDatabaseRef;
 import static com.example.meowee.MainActivity.firebaseStorage;
+import static com.example.meowee.MainActivity.fragmentFavorites;
 import static com.example.meowee.Tools.showToast;
 
 import androidx.annotation.NonNull;
@@ -106,6 +107,7 @@ public class CatDetailsActivity extends AppCompatActivity {
             toastMessage = R.string.added_to_favorites;
             currentUser.like(catID);
         }
+        fragmentFavorites.notifyAdapter();
         currentUserDatabaseRef.setValue(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

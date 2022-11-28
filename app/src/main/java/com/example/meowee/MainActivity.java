@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     // UI Elements
     private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
-    private Fragment fragmentMap, fragmentFavorites, fragmentProfile;
+    private Fragment fragmentMap, fragmentProfile;
     private ProductListFragment fragmentHome;
+    public static FavoritesFragment fragmentFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,8 +170,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void updateUI() {
-        TextView userNameGreeting = findViewById(R.id.textview_greeting);
-        userNameGreeting.setText(String.format("Hi, %s", currentUser.getFullName()));
+        fragmentHome.updateUsernameView();
     }
 
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
