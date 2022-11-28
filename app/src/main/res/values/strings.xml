@@ -4,7 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-
     <string name="tra_cuu_meo">Tra cứu mèo</string>
     <string name="tracuu">Tra Cứu Mèo</string>
     <string name="take_cam">Chụp ảnh</string>
@@ -12,4 +11,6 @@
     <string name="notifi_res">Chúng tôi cho rằng đến 85% đây là một con</string>
     <string name="predict_res">Mèo anh lông trắng</string>
     <string name="buy_now">Mua luôn!</string>
+    <string name="user_profile">Thông tin cá nhân</string>
+    <string name="phone">Điện thoại</string>
 </resources>
