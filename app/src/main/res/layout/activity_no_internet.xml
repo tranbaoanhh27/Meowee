@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".NoInternetActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonTryConnectAgain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:paddingVertical="15dp"
+        android:layout_marginBottom="50dp"
+        android:text="@string/try_connect_again"
+        android:backgroundTint="@color/brown"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/textviewTryRecheckInternet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/please_check_your_internet"
+        android:textSize="18sp"
+        android:textColor="@color/gray"
+        android:textAlignment="center"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonTryConnectAgain"/>
+
+    <TextView
+        android:id="@+id/textviewOopsNoInternet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/oops_no_internet"
+        android:textSize="30sp"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/textviewTryRecheckInternet"/>
+
+    <ImageView
+        android:id="@+id/imageTopBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-30dp"
+        android:layout_marginBottom="30dp"
+        android:contentDescription="@string/app_banner"
+        android:scaleType="centerCrop"
+        android:src="@drawable/angry_cat"
+        app:layout_constraintBottom_toTopOf="@id/textviewOopsNoInternet"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:src="@drawable/app_logo_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="2.5"
+        android:scaleY="2.5"
+        android:layout_marginTop="70dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/app_logo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

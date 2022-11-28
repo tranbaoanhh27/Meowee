@@ -108,17 +108,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null) {
-            Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
-            startActivity(signInSignUpIntent);
-        } else {
-            initDatabaseRefs();
-            if (currentUser != null) {
-                Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
+        if (!Tools.isOnline())
+            startActivity(new Intent(this, NoInternetActivity.class));
+        else {
+            firebaseAuth = FirebaseAuth.getInstance();
+            firebaseDatabase = FirebaseDatabase.getInstance();
+
+            firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser == null) {
+                Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
+                startActivity(signInSignUpIntent);
+            } else {
+                initDatabaseRefs();
+                if (currentUser != null) {
+                    Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -128,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 .getReference("Users")
                 .child(firebaseUser.getUid());
         currentUserDatabaseRef.addValueEventListener(onCurrentUserDataChanged);
-        allCatsDatabaseRef = firebaseDatabase
-                .getReference("Cats");
+
+        allCatsDatabaseRef = firebaseDatabase.getReference("Cats");
         allCatsDatabaseRef.addValueEventListener(onCatsDataChanged);
     }
 
