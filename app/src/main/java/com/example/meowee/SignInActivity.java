@@ -33,7 +33,7 @@ import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
 
-    private static final String TAG = "WTF!SignInActivity";
+    private static final String TAG = "SOS!SignInActivity";
 
     private TextView goToSignUp, forgotPassword;
     private TextInputEditText emailInput, passwordInput;

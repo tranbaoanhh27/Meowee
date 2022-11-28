@@ -1,5 +1,7 @@
 package com.example.meowee;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
@@ -73,5 +75,16 @@ public class Cat implements Serializable {
 
     public void setMale(boolean male) {
         isMale = male;
+    }
+
+    @Exclude
+    public boolean hasNameSimilarTo(String text) {
+        return this.name.toLowerCase().contains(text.toLowerCase());
+    }
+
+    @NonNull
+    @Exclude
+    public Cat clone() {
+        return new Cat(this.name, this.color, this.description, this.price, this.ageLevel, this.isMale);
     }
 }
