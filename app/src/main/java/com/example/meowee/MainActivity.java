@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
         getSupportFragmentManager().beginTransaction()
                 .replace(fragmentContainerResourceId, fragmentObject)
-                .addToBackStack(null)
                 .commit();
     }
 }
