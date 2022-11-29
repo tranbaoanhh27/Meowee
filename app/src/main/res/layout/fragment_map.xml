@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MapFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <fragment
+        android:id="@+id/ggmap_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="this is map fragment" />
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-</FrameLayout>
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/my_location_ImageButton"
+        android:src="@drawable/ic_my_location"
+        android:background="@drawable/circle_button"
+        android:scaleType="fitXY"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="20dp"
+        android:padding="5dp"
+        android:contentDescription="@string/list_branch" />
+
+    <LinearLayout
+        android:id="@+id/list_branch_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        android:background="@color/white"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/list_branch_heading"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:layout_marginVertical="70dp" />
+
+        <ListView
+            android:id="@+id/list_branch_ListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"/>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/list_branch_ImageButton"
+        android:src="@drawable/ic_list_branch"
+        android:background="@drawable/square_with_curved_edges_button"
+        android:scaleType="fitXY"
+        android:layout_width="50dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:padding="10dp"
+        android:contentDescription="@string/list_branch" />
+
+</RelativeLayout>
