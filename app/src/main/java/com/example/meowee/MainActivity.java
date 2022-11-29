@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         fragmentHome.updateUsernameView();
+        fragmentHome.updateCartButon();
     }
 
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -65,6 +66,8 @@ public class CatDetailsActivity extends AppCompatActivity {
                 currentUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())) ?
                         R.drawable.favorite_button_selected : R.drawable.favorite_button_unselected
         );
+        buttonGoToCart.setImageResource(currentUser.hasEmptyCart() ?
+                R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
         
         buttonAdd.setOnClickListener(v -> handleQuantity(1));
         buttonMinus.setOnClickListener(v -> handleQuantity(-1));
@@ -89,10 +92,20 @@ public class CatDetailsActivity extends AppCompatActivity {
     }
 
     private void goToCart() {
+        startActivity(new Intent(CatDetailsActivity.this, MyCartActivity.class));
     }
 
+    @SuppressLint("DefaultLocale")
     private void handleAddToCart() {
-
+        Integer catId = Cat.idOfCatWithName(cat.getName());
+        currentUser.increaseQuantity(String.format("CatID%d", catId), quantity);
+        currentUserDatabaseRef.setValue(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    showToast(CatDetailsActivity.this, R.string.added_to_cart);
+            }
+        });
     }
 
     private void handleAddToFavorite() {

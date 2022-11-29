@@ -3,10 +3,12 @@ package com.example.meowee;
 import static com.example.meowee.MainActivity.currentUser;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ public class ProductListFragment extends Fragment {
 
     // UI Elements
     private TextView usernameView;
+    private ImageButton buttonGoToCart;
     private SearchView searchView;
     private RecyclerView recyclerView;
     ProgressBar progressBar;
@@ -61,7 +64,16 @@ public class ProductListFragment extends Fragment {
 
         searchView = (SearchView) view.findViewById(R.id.searchview_home);
         searchView.setOnQueryTextListener(searchQueryTextListener);
+
+        buttonGoToCart = (ImageButton) view.findViewById(R.id.imagebutton_home_mycart);
+        updateCartButon();
+        buttonGoToCart.setOnClickListener(v -> startMyCartActivity());
+
         return view;
+    }
+
+    private void startMyCartActivity() {
+        startActivity(new Intent(ProductListFragment.this.getActivity(), MyCartActivity.class));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -86,5 +98,11 @@ public class ProductListFragment extends Fragment {
     public void updateUsernameView() {
         if (usernameView != null)
             usernameView.setText(String.format("Hi, %s", currentUser.getFullName()));
+    }
+
+    public void updateCartButon() {
+        if (buttonGoToCart != null && currentUser != null)
+            buttonGoToCart.setImageResource(
+                    currentUser.hasEmptyCart() ? R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
     }
 }

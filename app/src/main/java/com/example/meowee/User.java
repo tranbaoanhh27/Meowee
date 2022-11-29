@@ -3,11 +3,17 @@ package com.example.meowee;
 import static com.example.meowee.MainActivity.firebaseAuth;
 import static com.example.meowee.MainActivity.firebaseUser;
 
+import android.annotation.SuppressLint;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
 
 public class User {
 
@@ -16,6 +22,7 @@ public class User {
 
     private String fullName, phoneNumber, address, email;
     private ArrayList<Integer> favoriteCatIds = new ArrayList<>();
+    private Map<String, Integer> quantityByCatId = new HashMap<String, Integer>();    // key: catId, value: quantity
 
     public User() {}
 
@@ -36,6 +43,15 @@ public class User {
         this.address = address;
         this.email = email;
         this.setFavoriteCatIds(favoriteCatIds);
+    }
+
+    public User(String fullName, String phoneNumber, String address, String email, ArrayList<Integer> favoriteCatIds, Map<String, Integer> quantityByCatId) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.email = email;
+        this.setFavoriteCatIds(favoriteCatIds);
+        this.setQuantityByCatId(quantityByCatId);
     }
 
     public String getFullName() {
@@ -79,6 +95,37 @@ public class User {
         this.favoriteCatIds.addAll(favoriteCatIds);
     }
 
+    public Map<String, Integer> getQuantityByCatId() {
+        return quantityByCatId;
+    }
+
+    public void increaseQuantity(String catId, int delta) {
+        Integer value = this.quantityByCatId.get(catId);
+        if (value == null) value = 0;
+        this.quantityByCatId.put(catId, value + delta);
+    }
+
+    public void decreaseQuantity(String catId, int delta) {
+        Integer value = this.quantityByCatId.get(catId);
+        if (value != null && value - delta >= 0)
+            this.quantityByCatId.put(catId, value - delta);
+    }
+
+    public void setQuantityByCatId(Map<String, Integer> quantityByCatId) {
+        this.quantityByCatId = new HashMap<String, Integer>();
+        Set<String> catIdSet = quantityByCatId.keySet();
+        for (String catId : catIdSet) {
+            Integer quantity = quantityByCatId.get(catId);
+            this.quantityByCatId.put(catId, quantity);
+        }
+    }
+
+    @Exclude
+    public Integer getQuantityOf(int catId) {
+        @SuppressLint("DefaultLocale") Integer quantity = quantityByCatId.get(String.format("CatID%d", catId));
+        return quantity != null ? quantity : 0;
+    }
+
     @Exclude
     public Task<Void> saveToDatabase() {
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -102,5 +149,28 @@ public class User {
     public void like(Integer catId) {
         if (!this.favoriteCatIds.contains(catId))
             this.favoriteCatIds.add(catId);
+    }
+
+    @Exclude
+    public boolean addedToCartCatWithId(Integer catId) {
+        return getQuantityOf(catId) > 0;
+    }
+
+    @Exclude
+    public boolean hasEmptyCart() {
+        return quantityByCatId.isEmpty();
+    }
+
+    @Exclude
+    public int getTotalCatPriceInCart() {
+        int totalPrice = 0;
+        Set<String> catIdSet = quantityByCatId.keySet();
+        for (String catId : catIdSet) {
+            Integer quantity = quantityByCatId.get(catId);
+            if (quantity == null) quantity = 0;
+            Cat cat = Cat.getCatById(catId);
+            totalPrice += cat.getPrice() * quantity;
+        }
+        return totalPrice;
     }
 }
