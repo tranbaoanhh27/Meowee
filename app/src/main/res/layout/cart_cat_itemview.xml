@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_cat_cart_itemview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="5dp"
+    android:layout_marginHorizontal="20dp"
+    android:background="@drawable/rounded_rectangle"
+    android:paddingVertical="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageview_cat_cart_itemview"
+        android:background="@drawable/rounded_rectangle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_cat_cart_itemview_quantity"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/catimage" />
+
+    <TextView
+        android:id="@+id/textview_catname_cart_itemview"
+        android:text="Here to show cat name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/imageview_cat_cart_itemview"
+        app:layout_constraintTop_toTopOf="@id/imageview_cat_cart_itemview"
+        app:layout_constraintBottom_toTopOf="@id/textview_catprice_cart_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_catprice_cart_itemview"
+        android:text="Here to show cat price"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_catname_cart_itemview"
+        app:layout_constraintBottom_toTopOf="@id/textview_cattypetitle_cart_itemview"
+        app:layout_constraintStart_toStartOf="@id/textview_catname_cart_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_cattypetitle_cart_itemview"
+        android:text="@string/cat_type"
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_catprice_cart_itemview"
+        app:layout_constraintStart_toStartOf="@id/textview_catprice_cart_itemview"
+        app:layout_constraintBottom_toBottomOf="@id/imageview_cat_cart_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_cattype_cart_itemview"
+        android:text="Mèo con, mèo đực, màu xám."
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintStart_toEndOf="@id/textview_cattypetitle_cart_itemview"
+        app:layout_constraintTop_toTopOf="@id/textview_cattypetitle_cart_itemview"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_cat_cart_itemview_quantity"
+        android:background="@drawable/rounded_black_rectangle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_cattype_cart_itemview" >
+
+        <Button
+            android:id="@+id/button_cat_cart_itemview_decrease_quantity"
+            android:backgroundTint="@android:color/transparent"
+            android:text="-"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:padding="0dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/textview_cat_cart_itemview_quantity"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:padding="0dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/button_cat_cart_itemview_increase_quantity"
+            android:backgroundTint="@android:color/transparent"
+            android:text="+"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:padding="0dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

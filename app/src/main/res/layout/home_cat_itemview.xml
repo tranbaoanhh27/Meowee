@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_cat_home_itemview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="5dp"
+    android:layout_marginHorizontal="20dp"
+    android:background="@drawable/rounded_rectangle"
+    android:paddingVertical="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageview_cat_home_itemview"
+        android:background="@drawable/rounded_rectangle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/catimage" />
+
+    <TextView
+        android:id="@+id/textview_catname_home_itemview"
+        android:text="Here to show cat name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/imageview_cat_home_itemview"
+        app:layout_constraintTop_toTopOf="@id/imageview_cat_home_itemview"
+        app:layout_constraintBottom_toTopOf="@id/textview_catprice_home_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_catprice_home_itemview"
+        android:text="Here to show cat price"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_catname_home_itemview"
+        app:layout_constraintBottom_toTopOf="@id/textview_cattypetitle_home_itemview"
+        app:layout_constraintStart_toStartOf="@id/textview_catname_home_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_cattypetitle_home_itemview"
+        android:text="@string/cat_type"
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_catprice_home_itemview"
+        app:layout_constraintStart_toStartOf="@id/textview_catprice_home_itemview"
+        app:layout_constraintBottom_toBottomOf="@id/imageview_cat_home_itemview"/>
+
+    <TextView
+        android:id="@+id/textview_cattype_home_itemview"
+        android:text="Mèo con, mèo đực, màu xám."
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintStart_toEndOf="@id/textview_cattypetitle_home_itemview"
+        app:layout_constraintTop_toTopOf="@id/textview_cattypetitle_home_itemview"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

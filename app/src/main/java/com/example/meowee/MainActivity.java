@@ -1,13 +1,13 @@
 package com.example.meowee;
 
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,25 +20,35 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "SOS!MainActivity";
 
     public static FirebaseAuth firebaseAuth;
     public static FirebaseUser firebaseUser;
     public static FirebaseDatabase firebaseDatabase;
+    public static FirebaseStorage firebaseStorage;
     public static User currentUser;
-    public static DatabaseReference currentUserDatabaseRef;
+    public static DatabaseReference currentUserDatabaseRef, allCatsDatabaseRef;
 
     // UI Elements
     private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
-    private Fragment fragmentHome, fragmentMap, fragmentFavorites, fragmentProfile;
+    private Fragment fragmentMap, fragmentProfile;
+    private ProductListFragment fragmentHome;
+    public static FavoritesFragment fragmentFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
 
         fragmentHome = new ProductListFragment();
         fragmentMap = new MapFragment();
@@ -110,26 +120,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null) {
-            Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
-            startActivity(signInSignUpIntent);
-        } else {
-            initCurrentUser();
-            if (currentUser != null) {
-                Toast.makeText(MainActivity.this, "Chào mừng! " + currentUser.getFullName(), Toast.LENGTH_LONG).show();
+        if (!Tools.isOnline())
+            startActivity(new Intent(this, NoInternetActivity.class));
+        else {
+            firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser == null) {
+                Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
+                startActivity(signInSignUpIntent);
+            } else {
+                initDatabaseRefs();
             }
         }
     }
 
-    private void initCurrentUser() {
+    private void initDatabaseRefs() {
         currentUserDatabaseRef = firebaseDatabase
                 .getReference("Users")
                 .child(firebaseUser.getUid());
         currentUserDatabaseRef.addValueEventListener(onCurrentUserDataChanged);
+
+        allCatsDatabaseRef = firebaseDatabase.getReference("Cats");
+        allCatsDatabaseRef.addValueEventListener(onCatsDataChanged);
     }
 
     private final ValueEventListener onCurrentUserDataChanged = new ValueEventListener() {
@@ -146,8 +158,27 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final ValueEventListener onCatsDataChanged = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            Log.d(TAG, "All cats database changed.");
+            Cat.allCats = new ArrayList<>();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                Cat.allCats.add(dataSnapshot.getValue(Cat.class));
+            }
+            fragmentHome.notifyAdapter(Cat.allCats);
+            fragmentHome.progressBar.setVisibility(ProgressBar.GONE);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.d(TAG, error.toString());
+        }
+    };
+
     private void updateUI() {
-        // TODO: Update greeting to new name
+        fragmentHome.updateUsernameView();
+        fragmentHome.updateCartButon();
     }
 
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {

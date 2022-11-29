@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private final String TAG = "SignUpActivity";
+    private final String TAG = "SOS!SignUpActivity";
 
     private TextInputEditText emailInput, passwordInput, nameInput, phoneNumberInput;
     private ProgressBar progressBarSignUp;
