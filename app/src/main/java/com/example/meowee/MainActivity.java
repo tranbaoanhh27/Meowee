@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         buttonMap.setOnClickListener(onBottomNavBarButtonClicked);
         buttonFavorite.setOnClickListener(onBottomNavBarButtonClicked);
         buttonProfile.setOnClickListener(onBottomNavBarButtonClicked);
+        buttonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MainActivity.this, CatClassifyActivity.class);
+                startActivity(cameraIntent);
+            }
+        });
 
         setUpDefaultFragment();
 

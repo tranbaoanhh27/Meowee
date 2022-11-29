@@ -34,6 +34,13 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".CatClassifyActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -47,5 +54,8 @@
                 android:value="" />
         </activity>
     </application>
+    <uses-feature android:name="android.hardware.camera" android:required="true">
+
+    </uses-feature>
 
 </manifest>

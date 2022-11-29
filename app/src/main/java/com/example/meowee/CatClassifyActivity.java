@@ -44,7 +44,7 @@ public class CatClassifyActivity extends AppCompatActivity {
     private Button btnTakeCam, btnTakePic;
     private Button btnBuyNow;
     private ImageView imgBack, imgCart, imgCat;
-    private TextView tvResult;
+    private TextView tvResult, tvNotif;
 
     String[] labels = {"Mèo Bombay", "Mèo Anh lông ngắn", "Mèo Miến Điện", "Mèo tam thể", "Mèo tam thể pha loãng", "Mèo Himalaya", "Mèo Munchkin", "Mèo Ragdoll", "Mèo Nga xanh", "Mèo Siberian"};
 
@@ -68,7 +68,7 @@ public class CatClassifyActivity extends AppCompatActivity {
         }
         return max;
     }
-    int Classify(Bitmap bitmap){
+    float[] Classify(Bitmap bitmap){
         try {
             Model model = Model.newInstance(CatClassifyActivity.this);
 
@@ -82,15 +82,17 @@ public class CatClassifyActivity extends AppCompatActivity {
             Model.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
-            Integer res = getMax(outputFeature0.getFloatArray()) ;
+            float[] prob = outputFeature0.getFloatArray();
+
+
 
 
             // Releases model resources if no longer used.
             model.close();
-            return res;
+            return prob;
         } catch (IOException e) {
             // TODO Handle the exception
-            return -1;
+            return null;
         }
     }
 
@@ -126,9 +128,24 @@ public class CatClassifyActivity extends AppCompatActivity {
                         Bitmap photo = (Bitmap) data.getParcelableExtra("data");
                         Bitmap bitmap = ResizeToOriginal(photo);
                         imgCat.setImageBitmap(bitmap);
+                        tvResult.setVisibility(View.VISIBLE);
+                        tvNotif.setVisibility(View.VISIBLE);
 
-                        Integer type = Classify(bitmap);
-                        tvResult.setText(labels[type]);
+                        float[] prob = Classify(bitmap);
+                        Integer type = getMax(prob);
+
+                        Integer max_prob = Math.round(prob[type]*100);
+
+                        if(max_prob > 50) {
+
+                            tvResult.setText(labels[type]);
+                            String prob_text = "Chúng tôi cho rằng khoảng " + String.valueOf(max_prob) + "% đây là một con";
+                            tvNotif.setText(prob_text);
+                        }
+                        else{
+                            tvResult.setText("Vui lòng đổi ảnh khác !");
+                            tvNotif.setText("Chúng tôi không thể nhận diện ảnh này");
+                        }
 
                     }
                 }
@@ -158,9 +175,24 @@ public class CatClassifyActivity extends AppCompatActivity {
                     }
                     bitmap = ResizeToOriginal(bitmap);
                     imgCat.setImageBitmap(bitmap);
-                    Integer type = Classify(bitmap);
-                    tvResult.setText(labels[type]);
+                    float[] prob = Classify(bitmap);
+                    Integer type = getMax(prob);
 
+                    Integer max_prob = Math.round(prob[type]*100);
+                    tvResult.setVisibility(View.VISIBLE);
+                    tvNotif.setVisibility(View.VISIBLE);
+
+                    if(max_prob > 50) {
+
+
+                        tvResult.setText(labels[type]);
+                        String prob_text = "Chúng tôi cho rằng khoảng " + String.valueOf(max_prob) + "% đây là một con";
+                        tvNotif.setText(prob_text);
+                    }
+                    else{
+                        tvResult.setText("Vui lòng đổi ảnh khác !");
+                        tvNotif.setText("Chúng tôi không thể nhận diện ảnh này");
+                    }
 
 
                 }
@@ -179,8 +211,11 @@ public class CatClassifyActivity extends AppCompatActivity {
         imgCat = findViewById(R.id.imgview_cat);
 
         tvResult = findViewById(R.id.tv_res);
+        tvNotif = findViewById(R.id.tv_notifi_res);
+        tvResult.setVisibility(View.INVISIBLE);
+        tvNotif.setVisibility(View.INVISIBLE);
 
-       btnTakeCam.setOnClickListener(new View.OnClickListener() {
+        btnTakeCam.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -200,14 +235,17 @@ public class CatClassifyActivity extends AppCompatActivity {
        btnBuyNow.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               System.out.println("Stop");
+
+
+
            }
        });
 
        imgBack.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-
+                Intent Main = new Intent(CatClassifyActivity.this, MainActivity.class);
+                startActivity(Main);
            }
        });
        imgCart.setOnClickListener(new View.OnClickListener() {
