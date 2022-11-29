@@ -121,4 +121,11 @@ public class Cat implements Serializable {
                 return i;
         return -1;
     }
+
+    @Exclude
+    public static Cat getCatById(String id) {
+        // CatId format: "CatID__"
+        int idNumber = Integer.parseInt(id.substring(5));
+        return allCats.get(idNumber);
+    }
 }

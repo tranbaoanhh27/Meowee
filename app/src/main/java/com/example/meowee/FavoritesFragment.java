@@ -48,6 +48,6 @@ public class FavoritesFragment extends Fragment {
     }
 
     public void notifyAdapter() {
-        adapter.filterByFavorite();
+        if (adapter != null) adapter.filterByFavorite();
     }
 }

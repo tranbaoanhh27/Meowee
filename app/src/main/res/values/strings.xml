@@ -63,4 +63,5 @@
     <string name="add_to_cart">Thêm vào giỏ hàng</string>
     <string name="added_to_favorites">Đã thêm vào danh sách yêu thích</string>
     <string name="removed_from_favorites">Đã xoá khỏi danh sách yêu thích</string>
+    <string name="added_to_cart">Đã thêm vào giỏ hàng</string>
 </resources>
