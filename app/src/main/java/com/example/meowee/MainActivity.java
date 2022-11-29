@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private static final String TAG = "SOS!MainActivity";
 
     public static FirebaseAuth firebaseAuth;

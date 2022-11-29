@@ -36,6 +36,7 @@ public class Tools {
     }
 
     public static boolean isOnline() {
+
 //        Runtime runtime = Runtime.getRuntime();
 //        try {
 //            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
@@ -46,5 +47,6 @@ public class Tools {
 //
 //        return false;
         return true;
+
     }
 }
