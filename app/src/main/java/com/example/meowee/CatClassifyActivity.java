@@ -27,6 +27,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
 
 import com.example.meowee.ml.Model;
 
@@ -50,6 +51,12 @@ public class CatClassifyActivity extends AppCompatActivity {
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(fragmentContainerResourceId, fragmentObject)
+                .commit();
+    }
 
     Bitmap ResizeToOriginal(Bitmap photo){
         Integer originalWidth = imgCat.getWidth();
@@ -235,8 +242,13 @@ public class CatClassifyActivity extends AppCompatActivity {
        btnBuyNow.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Integer id = Cat.idOfCatWithName(tvResult.getText().toString());
+               String id_str= "CatID" + id.toString();
+               Cat cat = Cat.getCatById(id_str);
 
-
+               Intent CatDetail = new Intent(CatClassifyActivity.this, CatDetailsActivity.class);
+               CatDetail.putExtra("cat", cat);
+               startActivity(CatDetail);
 
            }
        });
@@ -251,7 +263,8 @@ public class CatClassifyActivity extends AppCompatActivity {
        imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent Cart = new Intent(CatClassifyActivity.this, MyCartActivity.class);
+                startActivity(Cart);
             }
         });
 
