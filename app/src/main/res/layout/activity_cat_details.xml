@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".CatDetailsActivity">
+
+    <ImageView
+        android:id="@+id/imageview_cat_details"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="-30dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_cat_details"
+        android:contentDescription="@string/catimage" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_cat_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cat_details_bottom_background"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/textview_cat_details_name"
+            android:text="@string/this_is_cat_name"
+            android:textSize="32sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/button_cat_details_minus"
+            android:src="@drawable/minus_button"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_name"
+            app:layout_constraintTop_toBottomOf="@id/textview_cat_details_name"
+            android:contentDescription="@string/button_minus_quantity" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_quantity"
+            android:text="1"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            app:layout_constraintTop_toTopOf="@id/button_cat_details_minus"
+            app:layout_constraintStart_toEndOf="@id/button_cat_details_minus"
+            app:layout_constraintBottom_toBottomOf="@id/button_cat_details_minus"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:id="@+id/button_cat_details_add"
+            android:src="@drawable/add_button"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="30dp"
+            app:layout_constraintStart_toEndOf="@id/textview_cat_details_quantity"
+            app:layout_constraintTop_toTopOf="@id/textview_cat_details_quantity"
+            app:layout_constraintBottom_toBottomOf="@id/textview_cat_details_quantity"
+            android:contentDescription="@string/button_add_quantity" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_total_price"
+            android:text="1.000.000 đ"
+            android:textSize="24sp"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/button_cat_details_add"
+            app:layout_constraintBottom_toBottomOf="@id/button_cat_details_add"
+            app:layout_constraintStart_toEndOf="@id/button_cat_details_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_age_label"
+            android:text="@string/age"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="@id/button_cat_details_minus"
+            app:layout_constraintTop_toBottomOf="@id/button_cat_details_minus"/>
+
+        <TextView
+            android:id="@+id/textview_cat_details_age"
+            android:text="Mèo con (dưới 3 tháng tuổi)"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toEndOf="@id/textview_cat_details_more_label"
+            app:layout_constraintTop_toTopOf="@id/textview_cat_details_age_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_color_label"
+            android:text="@string/color"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/textview_cat_details_age"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age_label" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_color"
+            android:text="Xám, đen xám (ngắn)"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age"
+            app:layout_constraintTop_toTopOf="@id/textview_cat_details_color_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_sex_label"
+            android:text="@string/sex"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/textview_cat_details_color"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age_label" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_sex"
+            android:text="Mèo đực"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age"
+            app:layout_constraintTop_toTopOf="@id/textview_cat_details_sex_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_more_label"
+            android:text="@string/more_info"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/textview_cat_details_sex"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age_label" />
+
+        <TextView
+            android:id="@+id/textview_cat_details_more"
+            android:text="Đã biết ăn cơm hay hạt, biết đi vệ sinh trong khay cát, đã triệt sản."
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_age"
+            app:layout_constraintTop_toTopOf="@id/textview_cat_details_more_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText" />
+        
+        <ImageButton
+            android:id="@+id/button_cat_details_favorite"
+            android:src="@drawable/favorite_button_unselected"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintBottom_toBottomOf="@id/button_cat_details_add_to_cart"
+            app:layout_constraintTop_toTopOf="@id/button_cat_details_add_to_cart"
+            app:layout_constraintStart_toStartOf="@id/textview_cat_details_name"
+            android:contentDescription="@string/button_add_to_favorite" />
+
+        <Button
+            android:id="@+id/button_cat_details_add_to_cart"
+            android:text="@string/add_to_cart"
+            android:textSize="20sp"
+            android:backgroundTint="#00D555"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/textview_cat_details_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <ImageButton
+        android:id="@+id/button_cat_details_go_to_cart"
+        android:src="@drawable/cart_button_no_dot"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_cat_details_back"
+        android:src="@drawable/up_button"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

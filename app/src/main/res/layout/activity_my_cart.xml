@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MyCartActivity">
+
+    <ImageButton
+        android:id="@+id/button_cart_back"
+        android:src="@drawable/up_button"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textiew_cart_title"
+        android:text="Giỏ hàng của tôi"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/button_cart_back"
+        app:layout_constraintBottom_toBottomOf="@id/button_cart_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button_cart_submitOrder"
+        android:text="Đặt hàng"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:backgroundTint="#00BA4B"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="50dp"
+        android:paddingVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textview_cart_total_label"
+        android:text="Tổng tiền:"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/button_cart_submitOrder"
+        app:layout_constraintStart_toStartOf="@id/button_cart_back" />
+
+    <TextView
+        android:id="@+id/textview_cart_total"
+        android:text="00.000.000đ"
+        android:textColor="#003471"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/textview_cart_total_label"
+        app:layout_constraintTop_toTopOf="@id/textview_cart_total_label"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textview_cart_deliver_fee_label"
+        android:text="Phí vận chuyển:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@id/textview_cart_total_label"
+        app:layout_constraintStart_toStartOf="@id/button_cart_back" />
+
+    <TextView
+        android:id="@+id/textview_cart_deliver_fee"
+        android:text="000.000đ"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/textview_cart_deliver_fee_label"
+        app:layout_constraintTop_toTopOf="@id/textview_cart_deliver_fee_label"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textview_cart_cat_value_label"
+        android:text="Tiền hàng:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@id/textview_cart_deliver_fee_label"
+        app:layout_constraintStart_toStartOf="@id/button_cart_back" />
+
+    <TextView
+        android:id="@+id/textview_cart_cat_value"
+        android:text="00.000.000đ"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/textview_cart_cat_value_label"
+        app:layout_constraintTop_toTopOf="@id/textview_cart_cat_value_label"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_cart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/button_cart_back"
+        app:layout_constraintBottom_toTopOf="@id/textview_cart_cat_value_label" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

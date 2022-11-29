@@ -9,7 +9,7 @@ import com.google.android.material.button.MaterialButton;
 
 public class SignInSignUpActivity extends AppCompatActivity {
 
-    private final String TAG = "SignInSignUpActivity";
+    private final String TAG = "SOS!SignInSignUpActivity";
 
     private MaterialButton buttonSignIn;
     private  MaterialButton buttonSignUp;

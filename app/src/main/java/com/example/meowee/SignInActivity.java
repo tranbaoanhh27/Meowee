@@ -33,7 +33,7 @@ import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
 
-    private static final String TAG = "SignInActivity";
+    private static final String TAG = "SOS!SignInActivity";
 
     private TextView goToSignUp, forgotPassword;
     private TextInputEditText emailInput, passwordInput;
@@ -54,29 +54,12 @@ public class SignInActivity extends AppCompatActivity {
 
         goToSignUp.setOnClickListener(v -> startSignUpActivity());
         submitButton.setOnClickListener(v -> handleSignInSubmit());
-        forgotPassword.setOnClickListener(v -> handleResetPassword());
+        forgotPassword.setOnClickListener(v -> startResetPasswordActivity());
     }
 
-    private void handleResetPassword() {
-        String email = Objects.requireNonNull(emailInput.getText()).toString();
-        if (TextUtils.isEmpty(email))
-            showToast(this, R.string.enter_email_and_we_will_help_you_reset_password);
-        else if (!Tools.emailPatternValidate(email))
-            showToast(SignInActivity.this, R.string.email_seem_like_incorrect_please_check);
-        else {
-            firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        String message = String.format(
-                                "Chúng tôi đã gửi email đến địa chỉ %s, hãy kiểm tra email và đặt lại mật khẩu nhé!",
-                                email
-                        );
-                        Toast.makeText(SignInActivity.this, message, Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }
+    private void startResetPasswordActivity() {
+        Intent intent = new Intent(SignInActivity.this, PasswordResetActivity.class);
+        startActivity(intent);
     }
 
     private void handleSignInSubmit() {
