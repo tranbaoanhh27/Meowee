@@ -1,64 +1,218 @@
+// MapFragment
 package com.example.meowee;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "MapFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private LinearLayout listBranchLinearLayout;
+    private ImageButton listBranchImageButton;
+    protected boolean isBackButton;
+    private ArrayList<Branch> listBranch;
+    private ListView listView;
+    private GoogleMap GGMAP;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    //location
+    boolean isPermissionGranter;
+    LocationRequest locationRequest;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public static FirebaseDatabase firebaseDatabase;
+    public static DatabaseReference branchDatabaseref;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        // view
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        // other parameters
+        listBranchLinearLayout = view.findViewById(R.id.list_branch_LinearLayout);
+        listBranchImageButton = view.findViewById(R.id.list_branch_ImageButton);
+        ImageButton myLocationImageButton = view.findViewById(R.id.my_location_ImageButton);
+        listView = view.findViewById(R.id.list_branch_ListView);
+        isBackButton = true;
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        branchDatabaseref = firebaseDatabase.getReference("Branches");
+        listBranch = new ArrayList<Branch>();
+
+        FusedLocationProviderClient fusedLocationClient;
+
+        branchDatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Branch branch = dataSnapshot.getValue(Branch.class);
+                    listBranch.add(branch);
+                    addMarkers(branch);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "onCancelled: can not fetch data");
+            }
+        });
+
+//        myLocationImageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ActivityResultLauncher<String[]> locationPermissionRequest =
+//                        registerForActivityResult(new ActivityResultContracts
+//                                .RequestMultiplePermissions(), result -> {
+//                            Boolean fineLocationGranted = null;
+//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                                fineLocationGranted = result.getOrDefault(
+//                                        Manifest.permission.ACCESS_FINE_LOCATION, false);
+//                            }
+//                            Boolean coarseLocationGranted = null;
+//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                                coarseLocationGranted = result.getOrDefault(
+//                                        Manifest.permission.ACCESS_COARSE_LOCATION, false);
+//                            }
+//                            if ((fineLocationGranted != null && fineLocationGranted) ||
+//                                    (coarseLocationGranted != null && coarseLocationGranted)) {
+//                                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+//                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                    fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//                                        @Override
+//                                        public void onSuccess(Location location) {
+//                                            // Got last known location. In some rare situations this can be null.
+//                                            if (location != null) {
+//                                                LatLng newFocus = new LatLng(location.getLatitude(), location.getLongitude());
+//                                                focusMap(newFocus, 17);
+//                                            }
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                            else {
+//                                return;
+//                            }
+//                        });
+//            }
+//        });
+
+        listBranchImageButton.setOnClickListener(v -> changeBackButton());
+
+        SupportMapFragment supportMapFragment = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.ggmap_fragment);
+
+        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                GGMAP = googleMap;
+                GGMAP.clear();
+                LatLng defaultPos = new LatLng(10.764788611278338, 106.67918051020337);
+                GGMAP.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        defaultPos, 15
+                ));
+            }
+        });
+
+        BranchListViewAdapter adapter = new BranchListViewAdapter(listBranch);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Branch branch = (Branch) adapter.getItem(i);
+                LatLng newFocus = new LatLng(branch.getLatitude(), branch.getLongitude());
+
+//                Log.d(TAG, "newFocus: Latitude - " + Double.toString(branch.latitude));
+
+                focusMap(newFocus, 17);
+
+                isBackButton = false;
+                changeBackButton();
+
+            }
+        });
+
+        return view;
+    }
+
+    private void focusMap(LatLng location, int zoom) {
+        GGMAP.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                location, zoom
+        ));
+    }
+
+    private void addMarkers(Branch markers) {
+        GGMAP.addMarker(new MarkerOptions().position(new LatLng(markers.getLatitude(), markers.getLongitude())).title(markers.getName()));
+    }
+
+    private void changeBackButton() {
+        if (isBackButton) {
+            listBranchLinearLayout.setVisibility(View.VISIBLE);
+            listBranchImageButton.setImageResource(R.drawable.ic_back_button);
+            isBackButton = false;
+        }
+        else {
+            listBranchLinearLayout.setVisibility(View.GONE);
+            listBranchImageButton.setImageResource(R.drawable.ic_list_branch);
+            isBackButton = true;
+        }
     }
 }
