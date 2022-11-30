@@ -175,7 +175,7 @@ public class CatClassifyActivity extends AppCompatActivity {
                             bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
                         } else {
                             ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, uri);
-                            bitmap = ImageDecoder.decodeBitmap(source);
+                            bitmap = ImageDecoder.decodeBitmap(source).copy(Bitmap.Config.RGBA_F16, true);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
