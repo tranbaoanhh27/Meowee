@@ -54,7 +54,7 @@
     <string name="enter_email_and_we_will_help_you_reset_password">Bạn quên mật khẩu ư? Đừng lo lắng!\nHãy nhập địa chỉ email và chúng tôi sẽ giúp bạn!</string>
     <string name="email_seem_like_incorrect_please_check">Địa chỉ email có vẻ không đúng, bạn vui lòng kiểm tra lại nhé!</string>
     <string name="list_branch">list_branch</string>
-    <string name="list_branch_heading">list_branch_heading</string>
+    <string name="list_branch_heading">Danh sách cửa hàng</string>
     <string name="hi">Hi</string>
     <string name="let_see_what_we_have">Xem chúng tôi có gì này!</string>
     <string name="cart">cart</string>
