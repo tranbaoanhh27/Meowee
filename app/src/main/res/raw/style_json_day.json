@@ -1,0 +1,38 @@
+[
+  {
+    "featureType":"administrative",
+    "elementType":"all",
+    "stylers": [
+      {
+        "visibility":"off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "all",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "all",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType":"transit",
+    "elementType":"all",
+    "stylers": [
+      {
+        "visibility":"off"
+      }
+    ]
+  }
+]
