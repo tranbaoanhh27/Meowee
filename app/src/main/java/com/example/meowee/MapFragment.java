@@ -5,6 +5,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -48,7 +52,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 
 public class MapFragment extends Fragment {
@@ -136,11 +139,7 @@ public class MapFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Branch branch = (Branch) adapter.getItem(i);
                 LatLng newFocus = new LatLng(branch.getLatitude(), branch.getLongitude());
-
-//                Log.d(TAG, "newFocus: Latitude - " + Double.toString(branch.latitude));
-
                 focusMap(newFocus, 16);
-
                 isBackButton = false;
                 changeBackButton();
 
@@ -162,42 +161,41 @@ public class MapFragment extends Fragment {
                         // location does not open
                         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
-                                if (location != null) {
-                                    reloadUserLocationMaxCnt = 2;
+                            fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Location> task) {
+                                    Location location = task.getResult();
+                                    if (location != null) {
+                                        reloadUserLocationMaxCnt = 2;
 
-                                    if ((location.getLatitude() != currentUserLocation.latitude)
-                                            || (location.getLongitude() != currentUserLocation.longitude)) {
-                                        for (Marker i : markerList) {
-                                            if (i.equals(currentUserLocation)) {
-                                                Toast.makeText(getContext(), "remove old location", Toast.LENGTH_SHORT).show();
-                                                markerList.remove(i);
-                                                i.remove();
-                                                break;
+                                        if ((location.getLatitude() != currentUserLocation.latitude)
+                                                || (location.getLongitude() != currentUserLocation.longitude)) {
+                                            for (Marker i : markerList) {
+                                                if (i.equals(currentUserLocation)) {
+                                                    Toast.makeText(getContext(), "Removed the old location", Toast.LENGTH_SHORT).show();
+                                                    markerList.remove(i);
+                                                    i.remove();
+                                                    break;
+                                                }
                                             }
+                                            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                            currentUserLocation = new LatLng(userLocation.latitude, userLocation.longitude);
+                                            Marker newMarker = GGMAP.addMarker(new MarkerOptions()
+                                                    .title("Your Location")
+                                                    .position(userLocation)
+                                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                            markerList.add(newMarker);
                                         }
-                                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                        currentUserLocation = new LatLng(userLocation.latitude, userLocation.longitude);
-                                        Marker newMarker = GGMAP.addMarker(new MarkerOptions()
-                                                .title("Your Location")
-                                                .position(userLocation)
-                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                                        markerList.add(newMarker);
+                                        focusMap(currentUserLocation, 16);
+                                    } else {
+                                        if (reloadUserLocationMaxCnt == 0) {
+                                            return;
+                                        }
+                                        reloadUserLocationMaxCnt -= 1;
+                                        requestUserLocation();
                                     }
-                                    focusMap(currentUserLocation, 16);
-                                } else {
-                                    if (reloadUserLocationMaxCnt == 0) {
-                                        return;
-                                    }
-                                    reloadUserLocationMaxCnt -= 1;
-                                    requestUserLocation();
-//                                    Toast.makeText(getContext(), "Location is null", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });}
+                            });}
                     }
                     else {
                         // location opens
@@ -259,7 +257,7 @@ public class MapFragment extends Fragment {
     // location
     private void requestUserLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)  {
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)  {
             // permissions grant
             if (isLocationEnable()) {
                 // location does not open
@@ -272,7 +270,7 @@ public class MapFragment extends Fragment {
                             reloadUserLocationMaxCnt = 2;
 
                             if ((location.getLatitude() != currentUserLocation.latitude)
-                            || (location.getLongitude() != currentUserLocation.longitude)) {
+                                    || (location.getLongitude() != currentUserLocation.longitude)) {
                                 for (Marker i : markerList) {
                                     if (i.equals(currentUserLocation)) {
                                         Toast.makeText(getContext(), "remove old location", Toast.LENGTH_SHORT).show();
@@ -320,7 +318,7 @@ public class MapFragment extends Fragment {
     private boolean isLocationEnable() {
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
             return true;
         return false;
     }
@@ -334,10 +332,17 @@ public class MapFragment extends Fragment {
 
 
     private void addMarkers(Branch markers) {
-        Marker newMarker = GGMAP.addMarker(new MarkerOptions().position(new LatLng(markers.getLatitude(), markers.getLongitude())).title(markers.getName()));
+        Marker newMarker = GGMAP.addMarker(new MarkerOptions()
+                .position(new LatLng(markers.getLatitude(), markers.getLongitude()))
+                .title(markers.getName())
+                .icon(BitmapDescriptorFactory.fromBitmap(
+                        Bitmap.createScaledBitmap(
+                                ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_branch)).getBitmap(),
+                                100, 100, false))
+                ));
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_branch)));
         markerList.add(newMarker);
     }
-
 
     private void changeBackButton() {
         if (isBackButton) {

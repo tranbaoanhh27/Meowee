@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="7dp">
     
     <TextView
         android:id="@+id/branch_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="30sp"/>
+        android:textSize="25sp"/>
 
     <TextView
         android:id="@+id/branch_phoneNumber"
