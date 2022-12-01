@@ -117,14 +117,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void createNewUserInDatabase(String name, String email, String phoneNumber) {
         User newUser = new User(name, phoneNumber, email);
-        newUser.saveToDatabase().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                    Log.d(TAG, "Successfully saved new user to database.");
-                else
-                    Log.d(TAG, "Failed to save new user to database");
-            }
+        newUser.saveToDatabase().addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+                Log.d(TAG, "Successfully saved new user to database.");
+            else
+                Log.d(TAG, "Failed to save new user to database");
         });
     }
 

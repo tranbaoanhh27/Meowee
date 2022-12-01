@@ -109,7 +109,7 @@ public class CatCartAdapter extends RecyclerView.Adapter<CatCartAdapter.ViewHold
 
     private void handleDecreaseQuantity(String catId, Cat cat, ViewHolder viewHolder) {
         try {
-            int returnQuantity = currentSyncedUser.decreaseQuantity(catId, 1);
+            currentSyncedUser.decreaseQuantity(catId, 1);
             syncCurrentUserQuantitiesInCart(task -> {
                 if (task.isSuccessful())
                     Log.d(TAG, "Increased quantity");

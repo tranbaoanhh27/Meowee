@@ -11,7 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -118,7 +117,7 @@ public class User {
     }
 
     public void setQuantityByCatId(Map<String, Integer> quantityByCatId) {
-        this.quantityByCatId = new HashMap<String, Integer>();
+        this.quantityByCatId = new HashMap<>();
         Set<String> catIdSet = quantityByCatId.keySet();
         for (String catId : catIdSet) {
             Integer quantity = quantityByCatId.get(catId);

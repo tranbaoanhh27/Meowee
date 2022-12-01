@@ -133,5 +133,3 @@ class Branch {
         return res;
     }
 }
-
-//currentUserDatabaseRef

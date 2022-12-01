@@ -18,10 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -39,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static FirebaseAuth firebaseAuth;
     public static FirebaseUser firebaseUser;
-    public static FirebaseDatabase firebaseDatabase;
-    public static FirebaseStorage firebaseStorage;
     public static User currentSyncedUser;
-    public static DatabaseReference currentUserDatabaseRef, allCatsDatabaseRef;
 
     // Views
-    private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
+    private ImageButton buttonHome;
+    private ImageButton buttonMap;
+    private ImageButton buttonFavorite;
+    private ImageButton buttonProfile;
     private Fragment fragmentMap, fragmentProfile;
     private ProductListFragment fragmentHome;
     public static FavoritesFragment fragmentFavorites;
@@ -61,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
 
         fragmentHome = new ProductListFragment();
         fragmentMap = new MapFragment();
@@ -71,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonHome = findViewById(R.id.bottomNavBarButtonHome);
         buttonMap = findViewById(R.id.bottomNavBarButtonMap);
-        buttonCamera = findViewById(R.id.bottomNavBarButtonCamera);
+        ImageButton buttonCamera = findViewById(R.id.bottomNavBarButtonCamera);
         buttonFavorite = findViewById(R.id.bottomNavBarButtonFavorite);
         buttonProfile = findViewById(R.id.bottomNavBarButtonProfile);
 

@@ -4,7 +4,6 @@ import static com.example.meowee.DatabaseHelper.downloadFile;
 import static com.example.meowee.DatabaseHelper.syncCurrentUserFavoriteCats;
 import static com.example.meowee.DatabaseHelper.syncCurrentUserQuantitiesInCart;
 import static com.example.meowee.MainActivity.currentSyncedUser;
-import static com.example.meowee.MainActivity.currentUserDatabaseRef;
 import static com.example.meowee.MainActivity.fragmentFavorites;
 import static com.example.meowee.Tools.showToast;
 

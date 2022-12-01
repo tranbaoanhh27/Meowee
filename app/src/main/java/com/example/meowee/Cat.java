@@ -1,19 +1,11 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.firebaseStorage;
-
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,7 +16,7 @@ public class Cat implements Serializable {
     private final String TAG = "SOS!Cat";
 
     @Exclude
-    public static ArrayList<Cat> allCats = new ArrayList<Cat>();    // Realtime Synced with database
+    public static ArrayList<Cat> allCats = new ArrayList<>();    // Realtime Synced with database
 
     // Attributes
     private String name, color, description, imageURL;
@@ -103,7 +95,7 @@ public class Cat implements Serializable {
     @SuppressLint("DefaultLocale")
     @NonNull
     public String toString() {
-        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, String.valueOf(isMale));
+        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, isMale);
     }
 
     @Exclude
@@ -125,6 +117,7 @@ public class Cat implements Serializable {
         return -1;
     }
 
+    @SuppressLint("DefaultLocale")
     @Exclude
     public String getStringId() {
         int intID = idOfCatWithName(name);
