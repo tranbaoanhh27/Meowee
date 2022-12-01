@@ -1,9 +1,11 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.currentUser;
-import static com.example.meowee.MainActivity.firebaseStorage;
+import static com.example.meowee.DatabaseHelper.downloadFile;
+import static com.example.meowee.DatabaseHelper.syncCurrentUserQuantitiesInCart;
+import static com.example.meowee.MainActivity.currentSyncedUser;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -17,9 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -28,15 +28,17 @@ public class CatCartAdapter extends RecyclerView.Adapter<CatCartAdapter.ViewHold
     private final String TAG = "SOS!CatCartAdapter";
 
     private ArrayList<Cat> cats;
+    private final UserDataChangedListener userDataChangedListener;
 
-    public CatCartAdapter(ArrayList<Cat> cats) {
+    public CatCartAdapter(ArrayList<Cat> cats, Context context) {
         this.setCats(cats);
+        userDataChangedListener = (UserDataChangedListener) context;
     }
 
     public void setCats(ArrayList<Cat> cats) {
-        this.cats = new ArrayList<Cat>();
+        this.cats = new ArrayList<>();
         for (Cat cat : cats) {
-            this.cats.add(cat.clone());
+            this.cats.add(cat.deepCopy());
         }
     }
 
@@ -51,42 +53,72 @@ public class CatCartAdapter extends RecyclerView.Adapter<CatCartAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cat cat = cats.get(position);
-        if (cat != null) initHolderViews(cat, holder);
+        updateHolderViews(cat, holder);
     }
 
     @SuppressLint("DefaultLocale")
-    private void initHolderViews(Cat cat, @NonNull CatCartAdapter.ViewHolder viewHolder) {
-        viewHolder.nameView.setText(cat.getName());
-        viewHolder.priceView.setText(String.format("%d đ", cat.getPrice()));
-        viewHolder.typesView.setText(String.format("Mèo %s, Mèo %s, Màu %s",
-                cat.getAgeLevel() == 1 ? "con" : "trưởng thành",
-                cat.getIsMale() ? "đực" : "cái",
-                cat.getColor())
-        );
-        viewHolder.quantityView.setText(
-                String.valueOf(currentUser.getQuantityOf(Cat.idOfCatWithName(cat.getName()))));
-        viewHolder.buttonDecreaseQuantity.setOnClickListener(v -> handleDecreaseQuantity());
-        viewHolder.buttonIncreaseQuantity.setOnClickListener(v -> handleIncreaseQuantity());
+    private void updateHolderViews(Cat cat, @NonNull CatCartAdapter.ViewHolder viewHolder) {
+        try {
+            if (cat != null) {
+                viewHolder.nameView.setText(cat.getName());
+                viewHolder.priceView.setText(cat.getDisplayablePrice());
+                viewHolder.typesView.setText(cat.getDisplayableTypes());
 
-        StorageReference ref = firebaseStorage.getReferenceFromUrl(cat.getImageURL());
-        ref.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                viewHolder.imageView.setImageBitmap(imageBitmap);
+                updateViewHolderQuantityTextView(cat, viewHolder);
+
+                viewHolder.buttonDecreaseQuantity.setOnClickListener(
+                        v -> handleDecreaseQuantity(cat.getStringId(), cat, viewHolder));
+
+                viewHolder.buttonIncreaseQuantity.setOnClickListener(
+                        v -> handleIncreaseQuantity(cat.getStringId(), cat, viewHolder));
+
+                OnSuccessListener<byte[]> onDownloadImageSuccessListener = bytes -> {
+                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    viewHolder.imageView.setImageBitmap(imageBitmap);
+                };
+
+                downloadFile(cat.getImageURL(), onDownloadImageSuccessListener);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Can't download image.");
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void handleIncreaseQuantity() {
+    private void updateViewHolderQuantityTextView(Cat cat, ViewHolder viewHolder) {
+        try {
+            viewHolder.quantityView.setText(
+                    String.valueOf(currentSyncedUser.getQuantityOf(Cat.idOfCatWithName(cat.getName()))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void handleDecreaseQuantity() {
+    private void handleIncreaseQuantity(String catId, Cat cat, ViewHolder viewHolder) {
+        try {
+            currentSyncedUser.increaseQuantity(catId, 1);
+            syncCurrentUserQuantitiesInCart(task -> {
+                if (task.isSuccessful())
+                    Log.d(TAG, "Increased quantity");
+            });
+            updateViewHolderQuantityTextView(cat, viewHolder);
+            userDataChangedListener.updateUserRelatedViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleDecreaseQuantity(String catId, Cat cat, ViewHolder viewHolder) {
+        try {
+            int returnQuantity = currentSyncedUser.decreaseQuantity(catId, 1);
+            syncCurrentUserQuantitiesInCart(task -> {
+                if (task.isSuccessful())
+                    Log.d(TAG, "Increased quantity");
+            });
+            updateViewHolderQuantityTextView(cat, viewHolder);
+            userDataChangedListener.updateUserRelatedViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -120,9 +152,14 @@ public class CatCartAdapter extends RecyclerView.Adapter<CatCartAdapter.ViewHold
     public void filterByInCart() {
         this.cats.clear();
         for (Cat cat : Cat.allCats) {
-            if (currentUser.addedToCartCatWithId(Cat.idOfCatWithName(cat.getName())))
-                this.cats.add(cat.clone());
+            if (currentSyncedUser.addedToCartCatWithId(Cat.idOfCatWithName(cat.getName())))
+                this.cats.add(cat.deepCopy());
         }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void notifyAdapter() {
         notifyDataSetChanged();
     }
 }

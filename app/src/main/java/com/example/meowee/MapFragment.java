@@ -2,6 +2,7 @@
 package com.example.meowee;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -332,7 +333,7 @@ public class MapFragment extends Fragment {
 
 
     private void addMarkers(Branch markers) {
-        Marker newMarker = GGMAP.addMarker(new MarkerOptions()
+        @SuppressLint("UseCompatLoadingForDrawables") Marker newMarker = GGMAP.addMarker(new MarkerOptions()
                 .position(new LatLng(markers.getLatitude(), markers.getLongitude()))
                 .title(markers.getName())
                 .icon(BitmapDescriptorFactory.fromBitmap(

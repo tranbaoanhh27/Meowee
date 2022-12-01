@@ -6,11 +6,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FavoritesFragment extends Fragment {
+public class FavoritesFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener {
+
+    private final String TAG = "SOS!FavoritesFragment";
 
     private RecyclerView recyclerView;
     private CatAdapter adapter;
@@ -48,6 +51,20 @@ public class FavoritesFragment extends Fragment {
     }
 
     public void notifyAdapter() {
-        if (adapter != null) adapter.filterByFavorite();
+        try {
+            if (adapter != null) adapter.filterByFavorite();
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+    }
+
+    @Override
+    public void updateUserRelatedViews() {
+        notifyAdapter();
+    }
+
+    @Override
+    public void updateCatsRelatedViews() {
+        notifyAdapter();
     }
 }

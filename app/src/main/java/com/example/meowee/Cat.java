@@ -21,7 +21,10 @@ import java.util.ArrayList;
 public class Cat implements Serializable {
 
     @Exclude
-    public static ArrayList<Cat> allCats = new ArrayList<Cat>();
+    private final String TAG = "SOS!Cat";
+
+    @Exclude
+    public static ArrayList<Cat> allCats = new ArrayList<Cat>();    // Realtime Synced with database
 
     // Attributes
     private String name, color, description, imageURL;
@@ -110,7 +113,7 @@ public class Cat implements Serializable {
 
     @NonNull
     @Exclude
-    public Cat clone() {
+    public Cat deepCopy() {
         return new Cat(this.name, this.color, this.description, this.imageURL, this.price, this.ageLevel, this.isMale);
     }
 
@@ -123,9 +126,49 @@ public class Cat implements Serializable {
     }
 
     @Exclude
+    public String getStringId() {
+        int intID = idOfCatWithName(name);
+        if (intID >= 0) return String.format("CatID%d", intID);
+        else return "";
+    }
+
+    @Exclude
     public static Cat getCatById(String id) {
         // CatId format: "CatID__"
         int idNumber = Integer.parseInt(id.substring(5));
         return allCats.get(idNumber);
+    }
+
+    @Exclude
+    public static Cat getCatByName(String catName) {
+        for (Cat cat : allCats) {
+            if (cat.name.equals(catName))
+                return cat.deepCopy();
+        }
+        return null;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String getDisplayablePrice() {
+        try {
+            return String.format("%, d đ", price);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+            return "N/A";
+        }
+    }
+
+    public String getDisplayableTypes() {
+        try {
+            return String.format(
+                    "Mèo %s, Mèo %s, Màu %s",
+                    ageLevel == 1 ? "con" : "trưởng thành",
+                    isMale ? "đực" : "cái",
+                    color
+            );
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+            return "N/A";
+        }
     }
 }

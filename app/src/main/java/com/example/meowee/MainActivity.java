@@ -1,13 +1,14 @@
 package com.example.meowee;
 
 
+import static com.example.meowee.DatabaseHelper.initCatsDatabaseReference;
+import static com.example.meowee.DatabaseHelper.initCurrentUserDatabaseReference;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,14 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
+interface UserDataChangedListener {
+    void updateUserRelatedViews();
+}
+
+interface CatsDataChangedListener {
+    void updateCatsRelatedViews();
+}
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SOS!MainActivity";
@@ -32,14 +41,19 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseUser firebaseUser;
     public static FirebaseDatabase firebaseDatabase;
     public static FirebaseStorage firebaseStorage;
-    public static User currentUser;
+    public static User currentSyncedUser;
     public static DatabaseReference currentUserDatabaseRef, allCatsDatabaseRef;
 
-    // UI Elements
+    // Views
     private ImageButton buttonHome, buttonMap, buttonCamera, buttonFavorite, buttonProfile;
     private Fragment fragmentMap, fragmentProfile;
     private ProductListFragment fragmentHome;
     public static FavoritesFragment fragmentFavorites;
+
+    private UserDataChangedListener userDataChangedListener;
+    private CatsDataChangedListener catsDataChangedListener;
+
+    public static UserDataChangedListener listenerForCatDetailsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,21 +79,19 @@ public class MainActivity extends AppCompatActivity {
         buttonMap.setOnClickListener(onBottomNavBarButtonClicked);
         buttonFavorite.setOnClickListener(onBottomNavBarButtonClicked);
         buttonProfile.setOnClickListener(onBottomNavBarButtonClicked);
-        buttonCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MainActivity.this, CatClassifyActivity.class);
-                startActivity(cameraIntent);
-            }
+        buttonCamera.setOnClickListener(v -> {
+            Intent cameraIntent = new Intent(MainActivity.this, CatClassifyActivity.class);
+            startActivity(cameraIntent);
         });
 
         setUpDefaultFragment();
-
     }
 
     private void setUpDefaultFragment() {
         resetSelectedBottomNavbarButton();
         buttonHome.setImageResource(R.drawable.home_selected);
+        userDataChangedListener = (UserDataChangedListener) fragmentHome;
+        catsDataChangedListener = (CatsDataChangedListener) fragmentHome;
         switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
     }
 
@@ -91,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
             if (viewId == R.id.bottomNavBarButtonHome) {
                 Log.d(TAG, "Home button clicked!");
                 buttonHome.setImageResource(R.drawable.home_selected);
+                userDataChangedListener = (UserDataChangedListener) fragmentHome;
+                catsDataChangedListener = (CatsDataChangedListener) fragmentHome;
                 switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
             } else if (viewId == R.id.bottomNavBarButtonMap) {
                 Log.d(TAG, "Map button clicked!");
@@ -99,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (viewId == R.id.bottomNavBarButtonFavorite) {
                 Log.d(TAG, "Favorite button clicked!");
                 buttonFavorite.setImageResource(R.drawable.favorite_selected);
+                userDataChangedListener = (UserDataChangedListener) fragmentFavorites;
+                catsDataChangedListener = (CatsDataChangedListener) fragmentFavorites;
                 switchFragment(R.id.fragmentcontainerMainActivity, fragmentFavorites);
             } else if (viewId == R.id.bottomNavBarButtonProfile) {
                 Log.d(TAG, "Profile button clicked!");
@@ -129,27 +145,20 @@ public class MainActivity extends AppCompatActivity {
                 Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
                 startActivity(signInSignUpIntent);
             } else {
-                initDatabaseRefs();
+                initCurrentUserDatabaseReference(currentUserDatabaseListener);
+                initCatsDatabaseReference(catsDatabaseListener);
             }
         }
     }
 
-    private void initDatabaseRefs() {
-        currentUserDatabaseRef = firebaseDatabase
-                .getReference("Users")
-                .child(firebaseUser.getUid());
-        currentUserDatabaseRef.addValueEventListener(onCurrentUserDataChanged);
-
-        allCatsDatabaseRef = firebaseDatabase.getReference("Cats");
-        allCatsDatabaseRef.addValueEventListener(onCatsDataChanged);
-    }
-
-    private final ValueEventListener onCurrentUserDataChanged = new ValueEventListener() {
+    private final ValueEventListener currentUserDatabaseListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             Log.d(TAG, "Detected a data change of current user on the database.");
-            currentUser = snapshot.getValue(User.class);
-            updateUI();
+            currentSyncedUser = snapshot.getValue(User.class);
+            userDataChangedListener.updateUserRelatedViews();
+            if (listenerForCatDetailsActivity != null)
+                listenerForCatDetailsActivity.updateUserRelatedViews();
         }
 
         @Override
@@ -158,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private final ValueEventListener onCatsDataChanged = new ValueEventListener() {
+    private final ValueEventListener catsDatabaseListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             Log.d(TAG, "All cats database changed.");
@@ -166,8 +175,7 @@ public class MainActivity extends AppCompatActivity {
             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                 Cat.allCats.add(dataSnapshot.getValue(Cat.class));
             }
-            fragmentHome.notifyAdapter(Cat.allCats);
-            fragmentHome.progressBar.setVisibility(ProgressBar.GONE);
+            catsDataChangedListener.updateCatsRelatedViews();
         }
 
         @Override
@@ -175,11 +183,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, error.toString());
         }
     };
-
-    private void updateUI() {
-        fragmentHome.updateUsernameView();
-        fragmentHome.updateCartButon();
-    }
 
     private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
         getSupportFragmentManager().beginTransaction()

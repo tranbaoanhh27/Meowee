@@ -22,7 +22,7 @@ public class User {
 
     private String fullName, phoneNumber, address, email;
     private ArrayList<Integer> favoriteCatIds = new ArrayList<>();
-    private Map<String, Integer> quantityByCatId = new HashMap<String, Integer>();    // key: catId, value: quantity
+    private Map<String, Integer> quantityByCatId = new HashMap<>();    // key: catId, value: quantity
 
     public User() {}
 
@@ -105,10 +105,16 @@ public class User {
         this.quantityByCatId.put(catId, value + delta);
     }
 
-    public void decreaseQuantity(String catId, int delta) {
+    public int decreaseQuantity(String catId, int delta) {
         Integer value = this.quantityByCatId.get(catId);
-        if (value != null && value - delta >= 0)
-            this.quantityByCatId.put(catId, value - delta);
+        if (value != null && value - delta >= 0) {
+            if (value - delta > 0)
+                this.quantityByCatId.put(catId, value - delta);
+            else
+                this.quantityByCatId.remove(catId);
+            return value - delta;
+        }
+        return 0;
     }
 
     public void setQuantityByCatId(Map<String, Integer> quantityByCatId) {
