@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDefaultFragment() {
         resetSelectedBottomNavbarButton();
         buttonHome.setImageResource(R.drawable.home_selected);
-        userDataChangedListener = (UserDataChangedListener) fragmentHome;
-        catsDataChangedListener = (CatsDataChangedListener) fragmentHome;
+        userDataChangedListener = fragmentHome;
+        catsDataChangedListener = fragmentHome;
         switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
     }
 
@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
             if (viewId == R.id.bottomNavBarButtonHome) {
                 Log.d(TAG, "Home button clicked!");
                 buttonHome.setImageResource(R.drawable.home_selected);
-                userDataChangedListener = (UserDataChangedListener) fragmentHome;
-                catsDataChangedListener = (CatsDataChangedListener) fragmentHome;
+                userDataChangedListener = fragmentHome;
+                catsDataChangedListener = fragmentHome;
                 switchFragment(R.id.fragmentcontainerMainActivity, fragmentHome);
             } else if (viewId == R.id.bottomNavBarButtonMap) {
                 Log.d(TAG, "Map button clicked!");
@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (viewId == R.id.bottomNavBarButtonFavorite) {
                 Log.d(TAG, "Favorite button clicked!");
                 buttonFavorite.setImageResource(R.drawable.favorite_selected);
-                userDataChangedListener = (UserDataChangedListener) fragmentFavorites;
-                catsDataChangedListener = (CatsDataChangedListener) fragmentFavorites;
+                userDataChangedListener = fragmentFavorites;
+                catsDataChangedListener = fragmentFavorites;
                 switchFragment(R.id.fragmentcontainerMainActivity, fragmentFavorites);
             } else if (viewId == R.id.bottomNavBarButtonProfile) {
                 Log.d(TAG, "Profile button clicked!");
