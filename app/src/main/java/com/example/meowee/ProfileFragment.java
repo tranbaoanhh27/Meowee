@@ -129,8 +129,6 @@ public class ProfileFragment extends Fragment {
 
             View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
-
             imgviewBack = view.findViewById(R.id.imgview_back);
             edtPhone = view.findViewById(R.id.edt_phone);
             edtEmail = view.findViewById(R.id.edt_email);

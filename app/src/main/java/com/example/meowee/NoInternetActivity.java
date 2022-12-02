@@ -15,7 +15,7 @@ public class NoInternetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_internet);
 
-        MaterialButton buttonCheckAgain = (MaterialButton) findViewById(R.id.buttonTryConnectAgain);
+        MaterialButton buttonCheckAgain = findViewById(R.id.buttonTryConnectAgain);
         buttonCheckAgain.setOnClickListener(v -> checkConnection());
     }
 

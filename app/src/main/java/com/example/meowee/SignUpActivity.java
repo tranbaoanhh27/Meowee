@@ -35,13 +35,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        TextView goToSignIn = (TextView) findViewById(R.id.textviewSignUpGoToSignIn);
-        emailInput = (TextInputEditText) findViewById(R.id.edittextSignUpEmail);
-        passwordInput = (TextInputEditText) findViewById(R.id.edittextSignUpPassword);
-        nameInput = (TextInputEditText) findViewById(R.id.edittextSignUpFullname);
-        phoneNumberInput = (TextInputEditText) findViewById(R.id.edittextSignUpPhone);
-        MaterialButton submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
-        progressBarSignUp = (ProgressBar) findViewById(R.id.progressbar_signup);
+        TextView goToSignIn = findViewById(R.id.textviewSignUpGoToSignIn);
+        emailInput = findViewById(R.id.edittextSignUpEmail);
+        passwordInput = findViewById(R.id.edittextSignUpPassword);
+        nameInput = findViewById(R.id.edittextSignUpFullname);
+        phoneNumberInput = findViewById(R.id.edittextSignUpPhone);
+        MaterialButton submitButton = findViewById(R.id.buttonSignUpSubmit);
+        progressBarSignUp = findViewById(R.id.progressbar_signup);
 
         goToSignIn.setOnClickListener(v -> startSignInActivity());
         submitButton.setOnClickListener(v -> handleSignUpAccount());

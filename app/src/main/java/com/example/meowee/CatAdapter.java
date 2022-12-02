@@ -96,11 +96,11 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageview_cat_home_itemview);
-            nameView = (TextView) itemView.findViewById(R.id.textview_catname_home_itemview);
-            priceView = (TextView) itemView.findViewById(R.id.textview_catprice_home_itemview);
-            typesView = (TextView) itemView.findViewById(R.id.textview_cattype_home_itemview);
-            layout = (ConstraintLayout) itemView.findViewById(R.id.layout_cat_home_itemview);
+            imageView = itemView.findViewById(R.id.imageview_cat_home_itemview);
+            nameView = itemView.findViewById(R.id.textview_catname_home_itemview);
+            priceView = itemView.findViewById(R.id.textview_catprice_home_itemview);
+            typesView = itemView.findViewById(R.id.textview_cattype_home_itemview);
+            layout = itemView.findViewById(R.id.layout_cat_home_itemview);
         }
     }
 

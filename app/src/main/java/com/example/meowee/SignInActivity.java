@@ -35,12 +35,12 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        goToSignUp = (TextView) findViewById(R.id.textviewSignInGoToSignUp);
-        forgotPassword = (TextView) findViewById(R.id.textviewSignInForgetPassword);
-        emailInput = (TextInputEditText) findViewById(R.id.edittextSignInEmail);
-        passwordInput = (TextInputEditText) findViewById(R.id.edittextSignInPassword);
-        submitButton = (MaterialButton) findViewById(R.id.buttonSignInSubmit);
-        progressBarSignIn = (ProgressBar) findViewById(R.id.progressbar_login);
+        goToSignUp = findViewById(R.id.textviewSignInGoToSignUp);
+        forgotPassword = findViewById(R.id.textviewSignInForgetPassword);
+        emailInput = findViewById(R.id.edittextSignInEmail);
+        passwordInput = findViewById(R.id.edittextSignInPassword);
+        submitButton = findViewById(R.id.buttonSignInSubmit);
+        progressBarSignIn = findViewById(R.id.progressbar_login);
 
         goToSignUp.setOnClickListener(v -> startSignUpActivity());
         submitButton.setOnClickListener(v -> handleSignInSubmit());

@@ -1,19 +1,8 @@
 package com.example.meowee;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 class Branch {
     private static final String TAG = "Branch";
@@ -58,7 +47,7 @@ class Branch {
     public void setOpenTime(String openTime) {
         this.H_open = Integer.parseInt(openTime.substring(0, 2));
         this.M_open = Integer.parseInt(openTime.substring(3, 5));
-        Log.d(TAG, "Branch: OpenTime [" + this.name + "] \"" + Integer.toString(H_open) + ":" + Integer.toString(M_open) + "\"");
+        Log.d(TAG, "Branch: OpenTime [" + this.name + "] \"" + H_open + ":" + M_open + "\"");
         this.openTime = openTime;
     }
 
@@ -69,7 +58,7 @@ class Branch {
     public void setCloseTime(String closeTime) {
         this.H_close = Integer.parseInt(closeTime.substring(0, 2));
         this.M_close = Integer.parseInt(closeTime.substring(3, 5));
-        Log.d(TAG, "Branch: CloseTime [" + this.name + "] \"" + Integer.toString(H_close) + ":" + Integer.toString(M_close) + "\"");
+        Log.d(TAG, "Branch: CloseTime [" + this.name + "] \"" + H_close + ":" + M_close + "\"");
         this.closeTime = closeTime;
     }
 
@@ -106,12 +95,10 @@ class Branch {
             return true;
         }
         else if (this.H_open == currentH) {
-            if (this.M_open <= currentM)
-                return true;
+            return this.M_open <= currentM;
         }
         else if (this.H_close == currentM) {
-            if (this.M_close > currentM)
-                return true;
+            return this.M_close > currentM;
         }
         return false;
     }
@@ -122,12 +109,12 @@ class Branch {
         boolean isopening = isOpening(currentH, currentM);
 
         if (isopening) {
-            res.add(String.format("Open"));
-            res.add(String.format("Closes " + this.closeTime));
+            res.add("Open");
+            res.add("Closes " + this.closeTime);
         }
         else {
-            res.add(String.format("Closed"));
-            res.add(String.format("Opens " + this.openTime));
+            res.add("Closed");
+            res.add("Opens " + this.openTime);
         }
 
         return res;

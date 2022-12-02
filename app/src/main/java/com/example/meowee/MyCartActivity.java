@@ -22,10 +22,10 @@ public class MyCartActivity extends AppCompatActivity implements UserDataChanged
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
 
-        ImageButton buttonBack = (ImageButton) findViewById(R.id.button_cart_back);
+        ImageButton buttonBack = findViewById(R.id.button_cart_back);
         buttonBack.setOnClickListener(v -> MyCartActivity.this.finish());
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_cart);
+        recyclerView = findViewById(R.id.recyclerview_cart);
         adapter = new CatCartAdapter(Cat.allCats, this);
         adapter.filterByInCart();
         recyclerView.setAdapter(adapter);

@@ -47,21 +47,21 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
-        usernameView = (TextView) view.findViewById(R.id.textview_greeting);
+        usernameView = view.findViewById(R.id.textview_greeting);
         updateUsernameView();
 
         adapter = new CatAdapter(view.getContext(), Cat.allCats);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_home);
+        recyclerView = view.findViewById(R.id.recyclerview_home);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar_home_fragment);
+        progressBar = view.findViewById(R.id.progressbar_home_fragment);
         updateProgressBar();
 
-        searchView = (SearchView) view.findViewById(R.id.searchview_home);
+        searchView = view.findViewById(R.id.searchview_home);
         searchView.setOnQueryTextListener(searchQueryTextListener);
 
-        buttonGoToCart = (ImageButton) view.findViewById(R.id.imagebutton_home_mycart);
+        buttonGoToCart = view.findViewById(R.id.imagebutton_home_mycart);
         updateCartButton();
         buttonGoToCart.setOnClickListener(v -> startMyCartActivity());
 

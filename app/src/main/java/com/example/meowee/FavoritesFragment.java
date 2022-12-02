@@ -44,7 +44,7 @@ public class FavoritesFragment extends Fragment implements UserDataChangedListen
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
         adapter = new CatAdapter(view.getContext(), Cat.allCats);
         adapter.filterByFavorite();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_favorites);
+        recyclerView = view.findViewById(R.id.recyclerview_favorites);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;

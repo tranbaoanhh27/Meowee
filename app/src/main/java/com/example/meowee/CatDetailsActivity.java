@@ -14,20 +14,16 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.FacebookSdk;
-import com.facebook.share.model.ShareHashtag;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -45,14 +41,14 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
     private ImageButton buttonMinus, buttonAdd, buttonAddToFavorite, buttonBack, buttonGoToCart, buttonShare;
     ShareDialog shareDialog;
 
-    private final UserDataChangedListener userDataChangedListener = (UserDataChangedListener) fragmentFavorites;
+    private final UserDataChangedListener userDataChangedListener = fragmentFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cat_details);
 
-        MainActivity.listenerForCatDetailsActivity = (UserDataChangedListener) this;
+        MainActivity.listenerForCatDetailsActivity = this;
 
         catName = getIntent().getStringExtra("catName");
         quantity = 1;
@@ -89,6 +85,20 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
                 };
 
                 downloadFile(cat.getImageURL(), onDownloadImageSuccessListener);
+
+                buttonShare.setOnClickListener(v -> {
+                    String down = cat.getDownloadURL();
+                    String name = cat.getName();
+                    name = name.replaceAll("\\s+","");
+                    String hashTag = "#"+name + "CatsMeowee";
+                    ShareLinkContent content = new ShareLinkContent.Builder()
+                            .setShareHashtag(new ShareHashtag.Builder()
+                                    .setHashtag(hashTag)
+                                    .build())
+                            .setContentUrl(Uri.parse(down))
+                            .build();
+                    shareDialog.show(content,  ShareDialog.Mode.WEB);
+                });
             }
 
             updateButtonGoToCart();
@@ -113,37 +123,6 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
             Log.d(TAG, e.toString());
             e.printStackTrace();
         }
-        buttonShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-
-            public void onClick(View v) {
-                String down = cat.getDownloadURL();
-                String name = cat.getName();
-                name = name.replaceAll("\\s+","");
-                String hashTag = "#"+name + "CatsMeowee";
-                ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setShareHashtag(new ShareHashtag.Builder()
-                                .setHashtag(hashTag)
-                                .build())
-                        .setContentUrl(Uri.parse(down))
-                        .build();
-                shareDialog.show(content,  ShareDialog.Mode.WEB);
-            }
-        });
-
-        StorageReference ref = firebaseStorage.getReferenceFromUrl(cat.getImageURL());
-        ref.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imageView.setImageBitmap(imageBitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Can't download image.");
-            }
-        });
     }
 
     private void updateQuantityTextView() {
@@ -224,20 +203,6 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
         if (quantity < 1) quantity = 1;
         updateQuantityTextView();
     }
-//    @SuppressLint("DefaultLocale")
-//    private void handleShare(Bitmap image) {
-//        ShareDialog shareDialog = new ShareDialog(this);
-//        SharePhoto photo = new SharePhoto.Builder()
-//                .setBitmap(image)
-//                .build();
-//        SharePhotoContent content = new SharePhotoContent.Builder()
-//                .setShareHashtag(new ShareHashtag.Builder()
-//                        .setHashtag("#ConnectTheWorld")
-//                        .build())
-//                .addPhoto(photo)
-//                .build();
-//        shareDialog.show(content);
-//    }
 
     private void findViews() {
         imageView = findViewById(R.id.imageview_cat_details);

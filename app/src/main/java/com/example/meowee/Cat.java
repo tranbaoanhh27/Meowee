@@ -97,7 +97,7 @@ public class Cat implements Serializable {
     @SuppressLint("DefaultLocale")
     @NonNull
     public String toString() {
-        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, String.valueOf(isMale));
+        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, isMale);
     }
 
     @Exclude
