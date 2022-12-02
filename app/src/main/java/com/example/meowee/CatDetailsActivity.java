@@ -13,13 +13,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,7 +46,8 @@ public class CatDetailsActivity extends AppCompatActivity {
     private TextView nameView, quantityView, totalPriceView, 
             ageView, colorView, sexView, moreInfoView;
     private Button buttonAddToCart;
-    private ImageButton buttonMinus, buttonAdd, buttonAddToFavorite, buttonBack, buttonGoToCart;
+    private ImageButton buttonMinus, buttonAdd, buttonAddToFavorite, buttonBack, buttonGoToCart, buttonShare;
+    ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,7 @@ public class CatDetailsActivity extends AppCompatActivity {
 
         cat = (Cat) getIntent().getSerializableExtra("cat");
         quantity = 1;
-
+        shareDialog = new ShareDialog(this);
         findViews();
         if (cat != null) initViewValues();
         else Log.d(TAG, "extra cat from intent is null");
@@ -75,6 +84,24 @@ public class CatDetailsActivity extends AppCompatActivity {
         buttonAddToCart.setOnClickListener(v -> handleAddToCart());
         buttonBack.setOnClickListener(v -> this.finish());
         buttonGoToCart.setOnClickListener(v -> goToCart());
+
+        buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+                String down = cat.getDownloadURL();
+                String name = cat.getName();
+                name = name.replaceAll("\\s+","");
+                String hashTag = "#"+name + "CatsMeowee";
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setShareHashtag(new ShareHashtag.Builder()
+                                .setHashtag(hashTag)
+                                .build())
+                        .setContentUrl(Uri.parse(down))
+                        .build();
+                shareDialog.show(content,  ShareDialog.Mode.WEB);
+            }
+        });
 
         StorageReference ref = firebaseStorage.getReferenceFromUrl(cat.getImageURL());
         ref.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -137,6 +164,20 @@ public class CatDetailsActivity extends AppCompatActivity {
         quantityView.setText(String.valueOf(quantity));
         totalPriceView.setText(String.format("%d đ", cat.getPrice() * quantity));
     }
+//    @SuppressLint("DefaultLocale")
+//    private void handleShare(Bitmap image) {
+//        ShareDialog shareDialog = new ShareDialog(this);
+//        SharePhoto photo = new SharePhoto.Builder()
+//                .setBitmap(image)
+//                .build();
+//        SharePhotoContent content = new SharePhotoContent.Builder()
+//                .setShareHashtag(new ShareHashtag.Builder()
+//                        .setHashtag("#ConnectTheWorld")
+//                        .build())
+//                .addPhoto(photo)
+//                .build();
+//        shareDialog.show(content);
+//    }
 
     private void findViews() {
         imageView = findViewById(R.id.imageview_cat_details);
@@ -153,5 +194,6 @@ public class CatDetailsActivity extends AppCompatActivity {
         buttonAddToFavorite = findViewById(R.id.button_cat_details_favorite);
         buttonBack = findViewById(R.id.button_cat_details_back);
         buttonGoToCart = findViewById(R.id.button_cat_details_go_to_cart);
+        buttonShare = findViewById(R.id.btn_share);
     }
 }
