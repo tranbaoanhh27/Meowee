@@ -27,6 +27,8 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.Objects;
+
 public class CatDetailsActivity extends AppCompatActivity implements UserDataChangedListener {
     
     private static final String TAG = "SOS!CatDetailsActivity";
@@ -71,7 +73,7 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
             if (cat != null) {
                 nameView.setText(cat.getName());
                 updateQuantityTextView();
-                totalPriceView.setText(String.format("%, d đ", cat.getPrice() * quantity));
+                updateTotalPriceTextView();
                 ageView.setText(cat.getAgeLevel() == 1 ? "Mèo con (dưới 3 tháng tuổi)" : "Mèo trưởng thành (từ 3 tháng tuổi)");
                 colorView.setText(String.format("Mèo %s", cat.getColor()));
                 sexView.setText(String.format("Mèo %s", cat.getIsMale() ? "đực" : "cái"));
@@ -113,6 +115,12 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
         } catch (Exception e) {
             Log.d(TAG, e.toString());
         }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void updateTotalPriceTextView() {
+        Cat cat = Cat.getCatByName(catName);
+        totalPriceView.setText(String.format("%, d đ", Objects.requireNonNull(cat).getPrice() * quantity));
     }
 
     private void updateButtonGoToCart() {
@@ -202,6 +210,7 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
         quantity += i;
         if (quantity < 1) quantity = 1;
         updateQuantityTextView();
+        updateTotalPriceTextView();
     }
 
     private void findViews() {

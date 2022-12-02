@@ -222,7 +222,7 @@ public class CatClassifyActivity extends AppCompatActivity {
            Cat cat = Cat.getCatById(id_str);
 
            Intent CatDetail = new Intent(CatClassifyActivity.this, CatDetailsActivity.class);
-           CatDetail.putExtra("cat", cat);
+           CatDetail.putExtra("catName", cat.getName());
            startActivity(CatDetail);
 
        });
