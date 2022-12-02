@@ -1,5 +1,6 @@
 package com.example.meowee;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private ImageView imgviewTakeCam, imgviewBack;
     private EditText edtPhone, edtName, edtEmail, edtAddress;
     private Button btnUpdateInfo;
+    private ImageButton buttonSignOut;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -134,6 +137,7 @@ public class ProfileFragment extends Fragment {
             edtEmail = view.findViewById(R.id.edt_email);
             edtAddress = view.findViewById(R.id.edt_address);
             edtName = view.findViewById(R.id.edt_name);
+            buttonSignOut = view.findViewById(R.id.button_profile_logout);
 
             if(currentUser!=null){
                 edtAddress.setText(currentUser.getAddress());
@@ -147,26 +151,36 @@ public class ProfileFragment extends Fragment {
             btnUpdateInfo = view.findViewById(R.id.btn_update_infor);
 
 
-            btnUpdateInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            btnUpdateInfo.setOnClickListener(view1 -> {
 
-                    if (cur_user == null) {
+                if (cur_user == null) {
 //                        Intent signInSignUpIntent = new Intent(MainActivity.this, SignInSignUpActivity.class);
 //                        startActivity(signInSignUpIntent);
-                    }
-                    else {
-                        cur_user.child("address").setValue(edtAddress.getText().toString());
-                        cur_user.child("email").setValue(edtEmail.getText().toString());
-                        cur_user.child("fullName").setValue(edtName.getText().toString());
-                        cur_user.child("phoneNumber").setValue(edtPhone.getText().toString());
-                        Toast.makeText(getActivity(), "Đã cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
-                    }
-
                 }
+                else {
+                    cur_user.child("address").setValue(edtAddress.getText().toString());
+                    cur_user.child("email").setValue(edtEmail.getText().toString());
+                    cur_user.child("fullName").setValue(edtName.getText().toString());
+                    cur_user.child("phoneNumber").setValue(edtPhone.getText().toString());
+                    Toast.makeText(getActivity(), "Đã cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                }
+
             });
+
+            buttonSignOut.setOnClickListener(v -> signOut());
             // Inflate the layout for this fragment
             return view;
         }
 
-};
+    private void signOut() {
+           try {
+               FirebaseAuth.getInstance().signOut();
+               Intent intent = new Intent(this.getActivity(), MainActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+               startActivity(intent);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+    }
+
+}
