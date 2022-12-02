@@ -78,5 +78,7 @@
     <string name="added_to_favorites">Đã thêm vào danh sách yêu thích</string>
     <string name="removed_from_favorites">Đã xoá khỏi danh sách yêu thích</string>
     <string name="added_to_cart">Đã thêm vào giỏ hàng</string>
+    <string name="facebook_app_id">837468867362307</string>
+    <string name="facebook_client_token">82090f47310a7ea79e386d6f07313649</string>
     <string name="error_occurred_pls_try_again_later">Đã có lỗi xảy ra, xin thông cảm và thử lại sau.</string>
 </resources>

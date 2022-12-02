@@ -19,14 +19,14 @@ public class Cat implements Serializable {
     public static ArrayList<Cat> allCats = new ArrayList<>();    // Realtime Synced with database
 
     // Attributes
-    private String name, color, description, imageURL;
+    private String name, color, description, imageURL, downloadURL;
     private int price, ageLevel;
     private boolean isMale;
 
     // Methods
     public Cat() {}
 
-    public Cat(String name, String color, String description, String imageURL, int price, int ageLevel, boolean isMale) {
+    public Cat(String name, String color, String description, String imageURL, String downloadURL, int price, int ageLevel, boolean isMale) {
         this.name = name;
         this.color = color;
         this.description = description;
@@ -34,6 +34,7 @@ public class Cat implements Serializable {
         this.price = price;
         this.ageLevel = ageLevel;
         this.isMale = isMale;
+        this.downloadURL = downloadURL;
     }
 
     public String getName() {
@@ -87,6 +88,7 @@ public class Cat implements Serializable {
     public String getImageURL() {
         return imageURL;
     }
+    public String getDownloadURL(){return downloadURL;}
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
@@ -95,7 +97,7 @@ public class Cat implements Serializable {
     @SuppressLint("DefaultLocale")
     @NonNull
     public String toString() {
-        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, isMale);
+        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, String.valueOf(isMale));
     }
 
     @Exclude
@@ -106,7 +108,7 @@ public class Cat implements Serializable {
     @NonNull
     @Exclude
     public Cat deepCopy() {
-        return new Cat(this.name, this.color, this.description, this.imageURL, this.price, this.ageLevel, this.isMale);
+        return new Cat(this.name, this.color, this.description, this.imageURL, this.downloadURL, this.price, this.ageLevel, this.isMale);
     }
 
     @Exclude

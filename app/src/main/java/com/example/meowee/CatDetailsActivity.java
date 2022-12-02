@@ -11,13 +11,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +42,8 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
     private ImageView imageView;
     private TextView nameView, quantityView, totalPriceView, ageView, colorView, sexView, moreInfoView;
     private Button buttonAddToCart;
-    private ImageButton buttonMinus, buttonAdd, buttonAddToFavorite, buttonBack, buttonGoToCart;
+    private ImageButton buttonMinus, buttonAdd, buttonAddToFavorite, buttonBack, buttonGoToCart, buttonShare;
+    ShareDialog shareDialog;
 
     private final UserDataChangedListener userDataChangedListener = (UserDataChangedListener) fragmentFavorites;
 
@@ -47,7 +56,7 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
 
         catName = getIntent().getStringExtra("catName");
         quantity = 1;
-
+        shareDialog = new ShareDialog(this);
         findViews();
         updateViews();
     }
@@ -104,6 +113,37 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
             Log.d(TAG, e.toString());
             e.printStackTrace();
         }
+        buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+                String down = cat.getDownloadURL();
+                String name = cat.getName();
+                name = name.replaceAll("\\s+","");
+                String hashTag = "#"+name + "CatsMeowee";
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setShareHashtag(new ShareHashtag.Builder()
+                                .setHashtag(hashTag)
+                                .build())
+                        .setContentUrl(Uri.parse(down))
+                        .build();
+                shareDialog.show(content,  ShareDialog.Mode.WEB);
+            }
+        });
+
+        StorageReference ref = firebaseStorage.getReferenceFromUrl(cat.getImageURL());
+        ref.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView.setImageBitmap(imageBitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Can't download image.");
+            }
+        });
     }
 
     private void updateQuantityTextView() {
@@ -184,6 +224,20 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
         if (quantity < 1) quantity = 1;
         updateQuantityTextView();
     }
+//    @SuppressLint("DefaultLocale")
+//    private void handleShare(Bitmap image) {
+//        ShareDialog shareDialog = new ShareDialog(this);
+//        SharePhoto photo = new SharePhoto.Builder()
+//                .setBitmap(image)
+//                .build();
+//        SharePhotoContent content = new SharePhotoContent.Builder()
+//                .setShareHashtag(new ShareHashtag.Builder()
+//                        .setHashtag("#ConnectTheWorld")
+//                        .build())
+//                .addPhoto(photo)
+//                .build();
+//        shareDialog.show(content);
+//    }
 
     private void findViews() {
         imageView = findViewById(R.id.imageview_cat_details);
@@ -200,6 +254,7 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
         buttonAddToFavorite = findViewById(R.id.button_cat_details_favorite);
         buttonBack = findViewById(R.id.button_cat_details_back);
         buttonGoToCart = findViewById(R.id.button_cat_details_go_to_cart);
+        buttonShare = findViewById(R.id.btn_share);
     }
 
     @Override
