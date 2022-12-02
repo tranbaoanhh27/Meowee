@@ -11,7 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ public class User {
 
     private String fullName, phoneNumber, address, email;
     private ArrayList<Integer> favoriteCatIds = new ArrayList<>();
-    private Map<String, Integer> quantityByCatId = new HashMap<String, Integer>();    // key: catId, value: quantity
+    private Map<String, Integer> quantityByCatId = new HashMap<>();    // key: catId, value: quantity
 
     public User() {}
 
@@ -105,14 +104,20 @@ public class User {
         this.quantityByCatId.put(catId, value + delta);
     }
 
-    public void decreaseQuantity(String catId, int delta) {
+    public int decreaseQuantity(String catId, int delta) {
         Integer value = this.quantityByCatId.get(catId);
-        if (value != null && value - delta >= 0)
-            this.quantityByCatId.put(catId, value - delta);
+        if (value != null && value - delta >= 0) {
+            if (value - delta > 0)
+                this.quantityByCatId.put(catId, value - delta);
+            else
+                this.quantityByCatId.remove(catId);
+            return value - delta;
+        }
+        return 0;
     }
 
     public void setQuantityByCatId(Map<String, Integer> quantityByCatId) {
-        this.quantityByCatId = new HashMap<String, Integer>();
+        this.quantityByCatId = new HashMap<>();
         Set<String> catIdSet = quantityByCatId.keySet();
         for (String catId : catIdSet) {
             Integer quantity = quantityByCatId.get(catId);

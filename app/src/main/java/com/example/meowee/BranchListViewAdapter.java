@@ -59,8 +59,8 @@ class BranchListViewAdapter extends BaseAdapter {
         Branch branch = (Branch) getItem(position);
         ((TextView) viewProduct.findViewById(R.id.branch_name)).setText(String.format("%s", branch.name));
         ((TextView) viewProduct.findViewById(R.id.branch_phoneNumber)).setText(String.format("Số điện thoại: %s", branch.phoneNumber));
-        TextView state = ((TextView) viewProduct.findViewById(R.id.branch_state));
-        TextView else_state = ((TextView) viewProduct.findViewById(R.id.branch_else_state));
+        TextView state = viewProduct.findViewById(R.id.branch_state);
+        TextView else_state = viewProduct.findViewById(R.id.branch_else_state);
 
         ArrayList<String> res = branch.getFormat(this.h, this.m);
 

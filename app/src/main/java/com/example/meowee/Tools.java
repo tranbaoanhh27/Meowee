@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,10 @@ public class Tools {
         Toast.makeText(context, context.getResources().getString(stringId), Toast.LENGTH_SHORT).show();
     }
 
+    public static void showErrorToast(Context context) {
+        Toast.makeText(context, R.string.error_occurred_pls_try_again_later, Toast.LENGTH_LONG).show();
+    }
+
     public static boolean checkValidName(String name) {
         return !TextUtils.isEmpty(name);
     }
@@ -36,17 +39,15 @@ public class Tools {
     }
 
     public static boolean isOnline() {
-
-//        Runtime runtime = Runtime.getRuntime();
-//        try {
-//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-//            int     exitValue = ipProcess.waitFor();
-//            return (exitValue == 0);
-//        }
-//        catch (IOException | InterruptedException e) { e.printStackTrace(); }
-//
-//        return false;
-        return true;
-
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

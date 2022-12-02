@@ -1,23 +1,16 @@
 package com.example.meowee;
 
 
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.speech.RecognitionListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,18 +20,17 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meowee.ml.Model;
 
 import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Objects;
 
 
 public class CatClassifyActivity extends AppCompatActivity {
@@ -52,19 +44,12 @@ public class CatClassifyActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private void switchFragment(int fragmentContainerResourceId, Fragment fragmentObject) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(fragmentContainerResourceId, fragmentObject)
-                .commit();
-    }
-
     Bitmap ResizeToOriginal(Bitmap photo){
-        Integer originalWidth = imgCat.getWidth();
-        Integer originalHeight = imgCat.getHeight();
-        Integer Screenwidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        Integer height = (Screenwidth*originalHeight)/originalWidth;
-        Bitmap bitmap=Bitmap.createScaledBitmap(photo,Screenwidth,height, true);
-        return bitmap;
+        int originalWidth = imgCat.getWidth();
+        int originalHeight = imgCat.getHeight();
+        int Screenwidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int height = (Screenwidth*originalHeight)/originalWidth;
+        return Bitmap.createScaledBitmap(photo,Screenwidth,height, true);
     }
     int getMax(float[] arr){
         int max = 0;
@@ -132,21 +117,21 @@ public class CatClassifyActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
                       Intent data = result.getData();
-                        Bitmap photo = (Bitmap) data.getParcelableExtra("data");
+                        Bitmap photo = Objects.requireNonNull(data).getParcelableExtra("data");
                         Bitmap bitmap = ResizeToOriginal(photo);
                         imgCat.setImageBitmap(bitmap);
                         tvResult.setVisibility(View.VISIBLE);
                         tvNotif.setVisibility(View.VISIBLE);
 
                         float[] prob = Classify(bitmap);
-                        Integer type = getMax(prob);
+                        int type = getMax(prob);
 
-                        Integer max_prob = Math.round(prob[type]*100);
+                        int max_prob = Math.round(prob[type]*100);
 
                         if(max_prob > 50) {
 
                             tvResult.setText(labels[type]);
-                            String prob_text = "Chúng tôi cho rằng khoảng " + String.valueOf(max_prob) + "% đây là một con";
+                            String prob_text = "Chúng tôi cho rằng khoảng " + max_prob + "% đây là một con";
                             tvNotif.setText(prob_text);
                         }
                         else{
@@ -183,9 +168,9 @@ public class CatClassifyActivity extends AppCompatActivity {
                     bitmap = ResizeToOriginal(bitmap);
                     imgCat.setImageBitmap(bitmap);
                     float[] prob = Classify(bitmap);
-                    Integer type = getMax(prob);
+                    int type = getMax(prob);
 
-                    Integer max_prob = Math.round(prob[type]*100);
+                    int max_prob = Math.round(prob[type]*100);
                     tvResult.setVisibility(View.VISIBLE);
                     tvNotif.setVisibility(View.VISIBLE);
 
@@ -193,7 +178,7 @@ public class CatClassifyActivity extends AppCompatActivity {
 
 
                         tvResult.setText(labels[type]);
-                        String prob_text = "Chúng tôi cho rằng khoảng " + String.valueOf(max_prob) + "% đây là một con";
+                        String prob_text = "Chúng tôi cho rằng khoảng " + max_prob + "% đây là một con";
                         tvNotif.setText(prob_text);
                     }
                     else{
@@ -222,51 +207,34 @@ public class CatClassifyActivity extends AppCompatActivity {
         tvResult.setVisibility(View.INVISIBLE);
         tvNotif.setVisibility(View.INVISIBLE);
 
-        btnTakeCam.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-               launchSomeActivity.launch(takePictureIntent);
+        btnTakeCam.setOnClickListener(view -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            launchSomeActivity.launch(takePictureIntent);
 
-           }
-       });
-
-       btnTakePic.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               mGetContent.launch("image/*");
-           }
-       });
-
-
-       btnBuyNow.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Integer id = Cat.idOfCatWithName(tvResult.getText().toString());
-               String id_str= "CatID" + id.toString();
-               Cat cat = Cat.getCatById(id_str);
-
-               Intent CatDetail = new Intent(CatClassifyActivity.this, CatDetailsActivity.class);
-               CatDetail.putExtra("cat", cat);
-               startActivity(CatDetail);
-
-           }
-       });
-
-       imgBack.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-                Intent Main = new Intent(CatClassifyActivity.this, MainActivity.class);
-                startActivity(Main);
-           }
-       });
-       imgCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent Cart = new Intent(CatClassifyActivity.this, MyCartActivity.class);
-                startActivity(Cart);
-            }
         });
+
+       btnTakePic.setOnClickListener(view -> mGetContent.launch("image/*"));
+
+
+       btnBuyNow.setOnClickListener(view -> {
+           Integer id = Cat.idOfCatWithName(tvResult.getText().toString());
+           String id_str= "CatID" + id.toString();
+           Cat cat = Cat.getCatById(id_str);
+
+           Intent CatDetail = new Intent(CatClassifyActivity.this, CatDetailsActivity.class);
+           CatDetail.putExtra("cat", cat);
+           startActivity(CatDetail);
+
+       });
+
+       imgBack.setOnClickListener(view -> {
+            Intent Main = new Intent(CatClassifyActivity.this, MainActivity.class);
+            startActivity(Main);
+       });
+       imgCart.setOnClickListener(view -> {
+           Intent Cart = new Intent(CatClassifyActivity.this, MyCartActivity.class);
+           startActivity(Cart);
+       });
 
 
     }

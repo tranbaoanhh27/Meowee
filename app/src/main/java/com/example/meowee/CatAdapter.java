@@ -1,7 +1,7 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.currentUser;
-import static com.example.meowee.MainActivity.firebaseStorage;
+import static com.example.meowee.DatabaseHelper.downloadFile;
+import static com.example.meowee.MainActivity.currentSyncedUser;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,9 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -39,9 +37,9 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
     }
 
     public void setCats(ArrayList<Cat> cats) {
-        this.cats = new ArrayList<Cat>();
+        this.cats = new ArrayList<>();
         for (Cat cat : cats) {
-            this.cats.add(cat.clone());
+            this.cats.add(cat.deepCopy());
         }
     }
 
@@ -60,36 +58,30 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
             Cat cat = cats.get(position);
             Log.d(TAG, cat.toString());
             holder.nameView.setText(cat.getName());
-            holder.priceView.setText(String.format("%d đ", cat.getPrice()));
-            holder.typesView.setText(
-                    String.format("Mèo %s, Mèo %s, Màu %s",
-                            cat.getAgeLevel() == 1 ? "con" : "trưởng thành",
-                            cat.getIsMale() ? "đực" : "cái",
-                            cat.getColor())
-            );
+            holder.priceView.setText(cat.getDisplayablePrice());
+            holder.typesView.setText(cat.getDisplayableTypes());
             holder.layout.setOnClickListener(v -> startCatDetailsActivity(cat));
-            StorageReference ref = firebaseStorage.getReferenceFromUrl(cat.getImageURL());
-            ref.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    holder.imageView.setImageBitmap(imageBitmap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Can't download image.");
-                }
-            });
+
+            OnSuccessListener<byte[]> onDownloadImageSuccessListener = bytes -> {
+                Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.imageView.setImageBitmap(imageBitmap);
+            };
+
+            downloadFile(cat.getImageURL(), onDownloadImageSuccessListener);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void startCatDetailsActivity(Cat cat) {
-        Intent intent = new Intent(context, CatDetailsActivity.class);
-        intent.putExtra("cat", cat);
-        context.startActivity(intent);
+        try {
+            Intent intent = new Intent(context, CatDetailsActivity.class);
+            intent.putExtra("catName", cat.getName());
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
     }
 
     @Override
@@ -104,11 +96,11 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageview_cat_home_itemview);
-            nameView = (TextView) itemView.findViewById(R.id.textview_catname_home_itemview);
-            priceView = (TextView) itemView.findViewById(R.id.textview_catprice_home_itemview);
-            typesView = (TextView) itemView.findViewById(R.id.textview_cattype_home_itemview);
-            layout = (ConstraintLayout) itemView.findViewById(R.id.layout_cat_home_itemview);
+            imageView = itemView.findViewById(R.id.imageview_cat_home_itemview);
+            nameView = itemView.findViewById(R.id.textview_catname_home_itemview);
+            priceView = itemView.findViewById(R.id.textview_catprice_home_itemview);
+            typesView = itemView.findViewById(R.id.textview_cattype_home_itemview);
+            layout = itemView.findViewById(R.id.layout_cat_home_itemview);
         }
     }
 
@@ -120,7 +112,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
         else {
             for (Cat cat : Cat.allCats) {
                 if (cat.hasNameSimilarTo(queryText))
-                    this.cats.add(cat.clone());
+                    this.cats.add(cat.deepCopy());
             }
         }
         notifyDataSetChanged();
@@ -130,8 +122,8 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
     public void filterByFavorite() {
         this.cats.clear();
         for (Cat cat : Cat.allCats) {
-            if (currentUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())))
-                this.cats.add(cat.clone());
+            if (currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())))
+                this.cats.add(cat.deepCopy());
         }
         notifyDataSetChanged();
     }

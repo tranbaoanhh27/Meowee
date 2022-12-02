@@ -35,13 +35,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        TextView goToSignIn = (TextView) findViewById(R.id.textviewSignUpGoToSignIn);
-        emailInput = (TextInputEditText) findViewById(R.id.edittextSignUpEmail);
-        passwordInput = (TextInputEditText) findViewById(R.id.edittextSignUpPassword);
-        nameInput = (TextInputEditText) findViewById(R.id.edittextSignUpFullname);
-        phoneNumberInput = (TextInputEditText) findViewById(R.id.edittextSignUpPhone);
-        MaterialButton submitButton = (MaterialButton) findViewById(R.id.buttonSignUpSubmit);
-        progressBarSignUp = (ProgressBar) findViewById(R.id.progressbar_signup);
+        TextView goToSignIn = findViewById(R.id.textviewSignUpGoToSignIn);
+        emailInput = findViewById(R.id.edittextSignUpEmail);
+        passwordInput = findViewById(R.id.edittextSignUpPassword);
+        nameInput = findViewById(R.id.edittextSignUpFullname);
+        phoneNumberInput = findViewById(R.id.edittextSignUpPhone);
+        MaterialButton submitButton = findViewById(R.id.buttonSignUpSubmit);
+        progressBarSignUp = findViewById(R.id.progressbar_signup);
 
         goToSignIn.setOnClickListener(v -> startSignInActivity());
         submitButton.setOnClickListener(v -> handleSignUpAccount());
@@ -117,14 +117,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void createNewUserInDatabase(String name, String email, String phoneNumber) {
         User newUser = new User(name, phoneNumber, email);
-        newUser.saveToDatabase().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                    Log.d(TAG, "Successfully saved new user to database.");
-                else
-                    Log.d(TAG, "Failed to save new user to database");
-            }
+        newUser.saveToDatabase().addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+                Log.d(TAG, "Successfully saved new user to database.");
+            else
+                Log.d(TAG, "Failed to save new user to database");
         });
     }
 

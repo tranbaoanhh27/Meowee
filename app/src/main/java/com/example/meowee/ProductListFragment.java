@@ -1,10 +1,11 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.currentUser;
+import static com.example.meowee.MainActivity.currentSyncedUser;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
-public class ProductListFragment extends Fragment {
+public class ProductListFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener{
 
     private static final String TAG = "SOS!ProductListFragment";
 
-    // UI Elements
+    // Views
     private TextView usernameView;
     private ImageButton buttonGoToCart;
     private SearchView searchView;
@@ -48,28 +47,33 @@ public class ProductListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
-        usernameView = (TextView) view.findViewById(R.id.textview_greeting);
-        if (currentUser != null) {
-            usernameView.setText(String.format("Hi, %s", currentUser.getFullName()));
-        }
+        usernameView = view.findViewById(R.id.textview_greeting);
+        updateUsernameView();
 
         adapter = new CatAdapter(view.getContext(), Cat.allCats);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_home);
+        recyclerView = view.findViewById(R.id.recyclerview_home);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar_home_fragment);
-        if (adapter.getItemCount() == 0)
-            progressBar.setVisibility(ProgressBar.VISIBLE);
+        progressBar = view.findViewById(R.id.progressbar_home_fragment);
+        updateProgressBar();
 
-        searchView = (SearchView) view.findViewById(R.id.searchview_home);
+        searchView = view.findViewById(R.id.searchview_home);
         searchView.setOnQueryTextListener(searchQueryTextListener);
 
-        buttonGoToCart = (ImageButton) view.findViewById(R.id.imagebutton_home_mycart);
-        updateCartButon();
+        buttonGoToCart = view.findViewById(R.id.imagebutton_home_mycart);
+        updateCartButton();
         buttonGoToCart.setOnClickListener(v -> startMyCartActivity());
 
         return view;
+    }
+
+    public void updateProgressBar() {
+        try {
+            progressBar.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        } catch (Exception exception) {
+            Log.d(TAG, exception.toString());
+        }
     }
 
     private void startMyCartActivity() {
@@ -77,8 +81,8 @@ public class ProductListFragment extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void notifyAdapter(ArrayList<Cat> cats) {
-        adapter.setCats(cats);
+    public void notifyAdapter() {
+        adapter.setCats(Cat.allCats);
         adapter.notifyDataSetChanged();
     }
 
@@ -96,13 +100,44 @@ public class ProductListFragment extends Fragment {
     };
 
     public void updateUsernameView() {
-        if (usernameView != null)
-            usernameView.setText(String.format("Hi, %s", currentUser.getFullName()));
+        try {
+            if (usernameView != null)
+                usernameView.setText(String.format("Hi, %s", currentSyncedUser.getFullName()));
+        } catch (Exception exception) {
+            Log.d(TAG, exception.toString());
+        }
     }
 
-    public void updateCartButon() {
-        if (buttonGoToCart != null && currentUser != null)
-            buttonGoToCart.setImageResource(
-                    currentUser.hasEmptyCart() ? R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
+    public void updateCartButton() {
+        try {
+            if (buttonGoToCart != null && currentSyncedUser != null)
+                buttonGoToCart.setImageResource(
+                        currentSyncedUser.hasEmptyCart() ?
+                                R.drawable.cart_button_no_dot
+                                :
+                                R.drawable.cart_not_empty);
+        } catch (Exception exception) {
+            Log.d(TAG, exception.toString());
+        }
+    }
+
+    public void updateViews() {
+        notifyAdapter();
+        updateProgressBar();
+        updateUsernameView();
+        updateCartButton();
+    }
+
+    @Override
+    public void updateUserRelatedViews() {
+        updateCartButton();
+        updateUsernameView();
+    }
+
+
+    @Override
+    public void updateCatsRelatedViews() {
+        notifyAdapter();
+        updateProgressBar();
     }
 }

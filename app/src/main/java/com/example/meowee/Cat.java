@@ -1,19 +1,11 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.firebaseStorage;
-
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +13,10 @@ import java.util.ArrayList;
 public class Cat implements Serializable {
 
     @Exclude
-    public static ArrayList<Cat> allCats = new ArrayList<Cat>();
+    private final String TAG = "SOS!Cat";
+
+    @Exclude
+    public static ArrayList<Cat> allCats = new ArrayList<>();    // Realtime Synced with database
 
     // Attributes
     private String name, color, description, imageURL, downloadURL;
@@ -102,7 +97,7 @@ public class Cat implements Serializable {
     @SuppressLint("DefaultLocale")
     @NonNull
     public String toString() {
-        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, String.valueOf(isMale));
+        return String.format("%s, %s, %d, %d, %s", name, color, ageLevel, price, isMale);
     }
 
     @Exclude
@@ -112,8 +107,8 @@ public class Cat implements Serializable {
 
     @NonNull
     @Exclude
-    public Cat clone() {
-        return new Cat(this.name, this.color, this.description, this.imageURL,this.downloadURL, this.price, this.ageLevel, this.isMale);
+    public Cat deepCopy() {
+        return new Cat(this.name, this.color, this.description, this.imageURL, this.downloadURL, this.price, this.ageLevel, this.isMale);
     }
 
     @Exclude
@@ -124,6 +119,14 @@ public class Cat implements Serializable {
         return -1;
     }
 
+    @SuppressLint("DefaultLocale")
+    @Exclude
+    public String getStringId() {
+        int intID = idOfCatWithName(name);
+        if (intID >= 0) return String.format("CatID%d", intID);
+        else return "";
+    }
+
     @Exclude
     public static Cat getCatById(String id) {
         // CatId format: "CatID__"
@@ -131,4 +134,36 @@ public class Cat implements Serializable {
         return allCats.get(idNumber);
     }
 
+    @Exclude
+    public static Cat getCatByName(String catName) {
+        for (Cat cat : allCats) {
+            if (cat.name.equals(catName))
+                return cat.deepCopy();
+        }
+        return null;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String getDisplayablePrice() {
+        try {
+            return String.format("%, d đ", price);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+            return "N/A";
+        }
+    }
+
+    public String getDisplayableTypes() {
+        try {
+            return String.format(
+                    "Mèo %s, Mèo %s, Màu %s",
+                    ageLevel == 1 ? "con" : "trưởng thành",
+                    isMale ? "đực" : "cái",
+                    color
+            );
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+            return "N/A";
+        }
+    }
 }

@@ -2,9 +2,12 @@
 package com.example.meowee;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -13,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,7 +32,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,7 +49,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 
 public class MapFragment extends Fragment {
@@ -100,7 +100,7 @@ public class MapFragment extends Fragment {
         // firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         branchDatabaseref = firebaseDatabase.getReference("Branches");
-        listBranch = new ArrayList<Branch>();
+        listBranch = new ArrayList<>();
 
         // location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -131,20 +131,13 @@ public class MapFragment extends Fragment {
         BranchListViewAdapter adapter = new BranchListViewAdapter(listBranch);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Branch branch = (Branch) adapter.getItem(i);
-                LatLng newFocus = new LatLng(branch.getLatitude(), branch.getLongitude());
+        listView.setOnItemClickListener((adapterView, view1, i, l) -> {
+            Branch branch = (Branch) adapter.getItem(i);
+            LatLng newFocus = new LatLng(branch.getLatitude(), branch.getLongitude());
+            focusMap(newFocus, 16);
+            isBackButton = false;
+            changeBackButton();
 
-//                Log.d(TAG, "newFocus: Latitude - " + Double.toString(branch.latitude));
-
-                focusMap(newFocus, 16);
-
-                isBackButton = false;
-                changeBackButton();
-
-            }
         });
 
 
@@ -152,7 +145,7 @@ public class MapFragment extends Fragment {
         requestPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
                     for (Map.Entry<String, Boolean> entry : isGranted.entrySet()) {
-                        if (entry.getValue() == false) {
+                        if (!entry.getValue()) {
                             Toast.makeText(getContext(), "Denied", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -162,9 +155,7 @@ public class MapFragment extends Fragment {
                         // location does not open
                         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
+                            fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
                                 Location location = task.getResult();
                                 if (location != null) {
                                     reloadUserLocationMaxCnt = 2;
@@ -173,7 +164,7 @@ public class MapFragment extends Fragment {
                                             || (location.getLongitude() != currentUserLocation.longitude)) {
                                         for (Marker i : markerList) {
                                             if (i.equals(currentUserLocation)) {
-                                                Toast.makeText(getContext(), "remove old location", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), "Removed the old location", Toast.LENGTH_SHORT).show();
                                                 markerList.remove(i);
                                                 i.remove();
                                                 break;
@@ -194,10 +185,8 @@ public class MapFragment extends Fragment {
                                     }
                                     reloadUserLocationMaxCnt -= 1;
                                     requestUserLocation();
-//                                    Toast.makeText(getContext(), "Location is null", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });}
+                            });}
                     }
                     else {
                         // location opens
@@ -208,12 +197,7 @@ public class MapFragment extends Fragment {
 
                 });
 
-        myLocationImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestUserLocation();
-            }
-        });
+        myLocationImageButton.setOnClickListener(view12 -> requestUserLocation());
 
 
 
@@ -221,34 +205,31 @@ public class MapFragment extends Fragment {
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.ggmap_fragment);
 
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                GGMAP = googleMap;
-                markerList = new ArrayList<Marker>();
+        supportMapFragment.getMapAsync(googleMap -> {
+            GGMAP = googleMap;
+            markerList = new ArrayList<>();
 
-                int h = Integer.parseInt((new SimpleDateFormat("HH")).
-                        format(Calendar.getInstance().getTime()));
+            int h = Integer.parseInt((new SimpleDateFormat("HH")).
+                    format(Calendar.getInstance().getTime()));
 
-                if (h >= 18 || h <= 6) {
-                    GGMAP.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                            getContext(), R.raw.style_json_night));
-                }
-                else {
-                    GGMAP.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                            getContext(), R.raw.style_json_day));
-                }
+            if (h >= 18 || h <= 6) {
+                GGMAP.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        getContext(), R.raw.style_json_night));
+            }
+            else {
+                GGMAP.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        getContext(), R.raw.style_json_day));
+            }
 
-                GGMAP.clear();
-                LatLng defaultPos = new LatLng(10.764788611278338, 106.67918051020337);
-                GGMAP.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        defaultPos, 16
-                ));
+            GGMAP.clear();
+            LatLng defaultPos = new LatLng(10.764788611278338, 106.67918051020337);
+            GGMAP.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    defaultPos, 16
+            ));
 
-                if (listBranch.size() != 0) {
-                    for (Branch branch : listBranch) {
-                        addMarkers(branch);
-                    }
+            if (listBranch.size() != 0) {
+                for (Branch branch : listBranch) {
+                    addMarkers(branch);
                 }
             }
         });
@@ -259,46 +240,43 @@ public class MapFragment extends Fragment {
     // location
     private void requestUserLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)  {
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)  {
             // permissions grant
             if (isLocationEnable()) {
                 // location does not open
-                fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        Location location = task.getResult();
+                fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+                    Location location = task.getResult();
 
-                        if (location != null) {
-                            reloadUserLocationMaxCnt = 2;
+                    if (location != null) {
+                        reloadUserLocationMaxCnt = 2;
 
-                            if ((location.getLatitude() != currentUserLocation.latitude)
-                            || (location.getLongitude() != currentUserLocation.longitude)) {
-                                for (Marker i : markerList) {
-                                    if (i.equals(currentUserLocation)) {
-                                        Toast.makeText(getContext(), "remove old location", Toast.LENGTH_SHORT).show();
-                                        markerList.remove(i);
-                                        i.remove();
-                                        break;
-                                    }
+                        if ((location.getLatitude() != currentUserLocation.latitude)
+                                || (location.getLongitude() != currentUserLocation.longitude)) {
+                            for (Marker i : markerList) {
+                                if (i.equals(currentUserLocation)) {
+                                    Toast.makeText(getContext(), "remove old location", Toast.LENGTH_SHORT).show();
+                                    markerList.remove(i);
+                                    i.remove();
+                                    break;
                                 }
-                                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                currentUserLocation = new LatLng(userLocation.latitude, userLocation.longitude);
-                                Marker newMarker = GGMAP.addMarker(new MarkerOptions()
-                                        .title("Your Location")
-                                        .position(userLocation)
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                                markerList.add(newMarker);
                             }
-                            focusMap(currentUserLocation, 16);
+                            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            currentUserLocation = new LatLng(userLocation.latitude, userLocation.longitude);
+                            Marker newMarker = GGMAP.addMarker(new MarkerOptions()
+                                    .title("Your Location")
+                                    .position(userLocation)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            markerList.add(newMarker);
                         }
-                        else {
-                            if (reloadUserLocationMaxCnt == 0) {
-                                return;
-                            }
-                            reloadUserLocationMaxCnt -= 1;
-                            requestUserLocation();
+                        focusMap(currentUserLocation, 16);
+                    }
+                    else {
+                        if (reloadUserLocationMaxCnt == 0) {
+                            return;
+                        }
+                        reloadUserLocationMaxCnt -= 1;
+                        requestUserLocation();
 //                            Toast.makeText(getContext(), "Location is null", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
             }
@@ -319,10 +297,8 @@ public class MapFragment extends Fragment {
 
     private boolean isLocationEnable() {
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-            return true;
-        return false;
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
 
@@ -334,10 +310,17 @@ public class MapFragment extends Fragment {
 
 
     private void addMarkers(Branch markers) {
-        Marker newMarker = GGMAP.addMarker(new MarkerOptions().position(new LatLng(markers.getLatitude(), markers.getLongitude())).title(markers.getName()));
+        @SuppressLint("UseCompatLoadingForDrawables") Marker newMarker = GGMAP.addMarker(new MarkerOptions()
+                .position(new LatLng(markers.getLatitude(), markers.getLongitude()))
+                .title(markers.getName())
+                .icon(BitmapDescriptorFactory.fromBitmap(
+                        Bitmap.createScaledBitmap(
+                                ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_branch)).getBitmap(),
+                                100, 100, false))
+                ));
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_branch)));
         markerList.add(newMarker);
     }
-
 
     private void changeBackButton() {
         if (isBackButton) {

@@ -1,9 +1,6 @@
 package com.example.meowee;
 
-import static com.example.meowee.MainActivity.currentUser;
-import static com.example.meowee.MainActivity.currentUserDatabaseRef;
 import static com.example.meowee.MainActivity.firebaseAuth;
-import static com.example.meowee.MainActivity.firebaseDatabase;
 import static com.example.meowee.MainActivity.firebaseUser;
 import static com.example.meowee.Tools.showToast;
 
@@ -12,22 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -45,12 +35,12 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        goToSignUp = (TextView) findViewById(R.id.textviewSignInGoToSignUp);
-        forgotPassword = (TextView) findViewById(R.id.textviewSignInForgetPassword);
-        emailInput = (TextInputEditText) findViewById(R.id.edittextSignInEmail);
-        passwordInput = (TextInputEditText) findViewById(R.id.edittextSignInPassword);
-        submitButton = (MaterialButton) findViewById(R.id.buttonSignInSubmit);
-        progressBarSignIn = (ProgressBar) findViewById(R.id.progressbar_login);
+        goToSignUp = findViewById(R.id.textviewSignInGoToSignUp);
+        forgotPassword = findViewById(R.id.textviewSignInForgetPassword);
+        emailInput = findViewById(R.id.edittextSignInEmail);
+        passwordInput = findViewById(R.id.edittextSignInPassword);
+        submitButton = findViewById(R.id.buttonSignInSubmit);
+        progressBarSignIn = findViewById(R.id.progressbar_login);
 
         goToSignUp.setOnClickListener(v -> startSignUpActivity());
         submitButton.setOnClickListener(v -> handleSignInSubmit());
