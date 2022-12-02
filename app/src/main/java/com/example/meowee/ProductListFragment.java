@@ -1,6 +1,7 @@
 package com.example.meowee;
 
 import static com.example.meowee.MainActivity.currentSyncedUser;
+import static com.example.meowee.Tools.showToast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -24,7 +25,7 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 
     // Views
     private TextView usernameView;
-    private ImageButton buttonGoToCart;
+    private ImageButton buttonGoToCart, buttonFilter;
     private SearchView searchView;
     private RecyclerView recyclerView;
     ProgressBar progressBar;
@@ -64,6 +65,9 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         buttonGoToCart = view.findViewById(R.id.imagebutton_home_mycart);
         updateCartButton();
         buttonGoToCart.setOnClickListener(v -> startMyCartActivity());
+
+        buttonFilter = view.findViewById(R.id.imagebutton_filter);
+        buttonFilter.setOnClickListener(v -> showToast(getActivity(), R.string.this_feature_is_being_developed));
 
         return view;
     }
