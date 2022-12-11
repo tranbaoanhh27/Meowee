@@ -9,27 +9,23 @@
 
     <ImageView
         android:id="@+id/imgview_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_back"
-
-        android:background="@drawable/bg_grey"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
-        app:layout_constraintEnd_toStartOf="@+id/tv_tracuu"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="fitXY"
+        android:layout_margin="20dp"
+        android:src="@drawable/up_button"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgview_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_cart"
-        app:layout_constraintBottom_toTopOf="@+id/btn_choose_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/cart_button_no_dot"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_tracuu"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -38,92 +34,96 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textSize="24sp"
         android:text="@string/tracuu"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
+        app:layout_constraintBottom_toBottomOf="@id/imgview_back"
         app:layout_constraintEnd_toStartOf="@+id/imgview_cart"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imgview_back"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/imgview_back" />
 
     <Button
         android:id="@+id/btn_choose_img"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:layout_marginStart="10dp"
         android:drawableLeft="@drawable/ic_choose_img"
-
         android:backgroundTint="@color/get_picture_bg"
         android:text="@string/choose_img"
-        app:layout_constraintBottom_toTopOf="@+id/imgview_cat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_camera"
-        app:layout_constraintTop_toBottomOf="@+id/imgview_cart" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/imgview_cat"
+        app:layout_constraintStart_toEndOf="@id/btn_camera"
+        app:layout_constraintTop_toTopOf="@id/btn_camera"
+        app:layout_constraintBottom_toBottomOf="@id/btn_camera" />
 
     <ImageView
         android:id="@+id/imgview_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img_cat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/please_select_photo"
+        android:background="@drawable/super_rounded_rectangle"
         app:layout_constraintBottom_toTopOf="@+id/tv_notifi_res"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_camera" />
 
     <Button
         android:id="@+id/btn_camera"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/get_picture_bg"
         android:drawableLeft="@drawable/ic_camera"
+        android:paddingVertical="15dp"
         android:text="@string/take_cam"
-        app:layout_constraintBottom_toTopOf="@+id/imgview_cat"
+        android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/btn_choose_img"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgview_back" />
+        app:layout_constraintStart_toStartOf="@id/imgview_cat"
+        app:layout_constraintTop_toBottomOf="@+id/imgview_back"
+        app:layout_constraintBottom_toTopOf="@id/imgview_cat"/>
 
     <TextView
         android:id="@+id/tv_notifi_res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/notifi_res"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/tv_res"
+        android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgview_cat" />
+        app:layout_constraintBottom_toTopOf="@id/tv_res" />
 
     <TextView
         android:id="@+id/tv_res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/predict_res"
-        android:textSize="35dp"
         android:textColor="#000000"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btn_buy"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_notifi_res" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_buy"
-        android:layout_width="wrap_content"
+        android:layout_width="272dp"
         android:layout_height="wrap_content"
         android:text="@string/buy_now"
         android:backgroundTint="#00FF66"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:paddingVertical="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_res" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
