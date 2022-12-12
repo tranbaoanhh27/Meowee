@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private UserDataChangedListener userDataChangedListener;
     private CatsDataChangedListener catsDataChangedListener;
 
-    public static UserDataChangedListener listenerForCatDetailsActivity;
+    public static UserDataChangedListener listenerForCatDetailsActivity, listenerForCatClassifyActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
             userDataChangedListener.updateUserRelatedViews();
             if (listenerForCatDetailsActivity != null)
                 listenerForCatDetailsActivity.updateUserRelatedViews();
+            if (listenerForCatClassifyActivity != null)
+                listenerForCatClassifyActivity.updateUserRelatedViews();
         }
 
         @Override
