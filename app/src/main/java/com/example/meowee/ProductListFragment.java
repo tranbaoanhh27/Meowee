@@ -1,13 +1,14 @@
 package com.example.meowee;
 
 import static com.example.meowee.MainActivity.currentSyncedUser;
-import static com.example.meowee.Tools.showToast;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +18,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +31,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,20 +38,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
-import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
-
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
-public class ProductListFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener{
+public class ProductListFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener {
 
     private static final String TAG = "SOS!ProductListFragment";
 
@@ -59,15 +53,23 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     private RecyclerView recyclerView;
     ProgressBar progressBar;
     private CatAdapter adapter;
+    private ScrollView filterContainer;
+    private Button filterConfirmButton, filterResetButton;
+    private Button buttonSexMale, buttonSexFemale;
+    private Button buttonAgeLow, buttonAgeHigh;
+    private EditText inputMinPrice, inputMaxPrice;
+    private Button buttonColorBlack, buttonColorWhite, buttonColorYellow, buttonColorGray, buttonColorBrown;
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private ImageView micButton;
 
-    FirebaseTranslator englishGermanTranslator;
+//    FirebaseTranslator englishGermanTranslator;
+
     public ProductListFragment() {
         // Required empty public constructor
     }
-    ActivityResultLauncher<Intent> someActivityResultLauncher  = registerForActivityResult(
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -80,12 +82,18 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
                                 RecognizerIntent.EXTRA_RESULTS);
 
                         searchView.setQuery(
-                                Objects.requireNonNull(res).get(0),true);
+                                Objects.requireNonNull(res).get(0), true);
 //                        downloadModal(Objects.requireNonNull(res).get(0));
 
                     }
                 }
             });
+
+    // Filters selection
+    ArrayList<String> selectedSex = new ArrayList<>();
+    ArrayList<Integer> selectedAge = new ArrayList<>();
+    Integer minPrice = null, maxPrice = null;
+    ArrayList<String> selectedColor = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,10 +101,9 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         if (getArguments() != null) {
             // TODO: Reload arguments from savedInstanceState
         }
-        if(ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
-        }
-        else{
+        } else {
             requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
         }
         // Create an English-German translator:
@@ -111,7 +118,6 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 //        // below line is to get instance
 //        // for firebase natural language.
 //        englishGermanTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options);
-
 
 
     }
@@ -140,8 +146,39 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         updateCartButton();
         buttonGoToCart.setOnClickListener(v -> startMyCartActivity());
 
+        filterContainer = view.findViewById(R.id.filters_container);
+
+        filterConfirmButton = view.findViewById(R.id.button_filter_confirm);
+        filterResetButton = view.findViewById(R.id.button_filter_reset);
+        filterConfirmButton.setOnClickListener(v -> onConfirm());
+        filterResetButton.setOnClickListener(v -> resetFilters());
+
+        buttonSexMale = view.findViewById(R.id.button_select_filter_sex_male);
+        buttonSexFemale = view.findViewById(R.id.button_select_filter_sex_female);
+        buttonSexMale.setOnClickListener(filterSelectListener);
+        buttonSexFemale.setOnClickListener(filterSelectListener);
+
+        buttonAgeLow = view.findViewById(R.id.button_select_filter_age_low);
+        buttonAgeHigh = view.findViewById(R.id.button_select_filter_age_high);
+        buttonAgeLow.setOnClickListener(filterSelectListener);
+        buttonAgeHigh.setOnClickListener(filterSelectListener);
+
+        inputMinPrice = view.findViewById(R.id.edittextMinimumPrice);
+        inputMaxPrice = view.findViewById(R.id.edittextMaximumPrice);
+
+        buttonColorBlack = view.findViewById(R.id.button_select_filter_color_black);
+        buttonColorWhite = view.findViewById(R.id.button_select_filter_color_white);
+        buttonColorGray = view.findViewById(R.id.button_select_filter_color_gray);
+        buttonColorYellow = view.findViewById(R.id.button_select_filter_color_yellow);
+        buttonColorBrown = view.findViewById(R.id.button_select_filter_color_brown);
+        buttonColorBrown.setOnClickListener(filterSelectListener);
+        buttonColorYellow.setOnClickListener(filterSelectListener);
+        buttonColorGray.setOnClickListener(filterSelectListener);
+        buttonColorWhite.setOnClickListener(filterSelectListener);
+        buttonColorBlack.setOnClickListener(filterSelectListener);
+
         buttonFilter = view.findViewById(R.id.imagebutton_filter);
-        buttonFilter.setOnClickListener(v -> showToast(getActivity(), R.string.this_feature_is_being_developed));
+        buttonFilter.setOnClickListener(v -> showFilterMenu());
 
         micButton = view.findViewById(R.id.img_mic);
 
@@ -149,7 +186,7 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
             @Override
             public void onClick(View v) {
                 Intent intent
-                        = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -162,12 +199,165 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 
                 } catch (Exception e) {
                     String appPackageName = "com.google.android.googlequicksearchbox";
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
+            }
         });
 
         return view;
+    }
+
+    private void resetFilters() {
+        selectedColor.clear();
+        selectedAge.clear();
+        selectedSex.clear();
+        minPrice = null;
+        maxPrice = null;
+        updateAgeFilterButtons();
+        updateColorFilterButtons();
+        updateSexFilterButtons();
+        inputMinPrice.setText("");
+        inputMaxPrice.setText("");
+    }
+
+    private void onConfirm() {
+        hideFilterMenu();
+        String minPriceString = inputMinPrice.getText().toString();
+        String maxPriceString = inputMaxPrice.getText().toString();
+
+        if (!minPriceString.isEmpty())
+            minPrice = Integer.parseInt(inputMinPrice.getText().toString());
+
+        if (!maxPriceString.isEmpty())
+            maxPrice = Integer.parseInt(inputMaxPrice.getText().toString());
+
+        adapter.filterByOptions(selectedSex, selectedAge, minPrice, maxPrice, selectedColor);
+    }
+
+    View.OnClickListener filterSelectListener = v -> {
+        if (v.getId() == R.id.button_select_filter_sex_male) {
+            if (selectedSex.contains("male")) selectedSex.remove("male");
+            else selectedSex.add("male");
+            updateSexFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_sex_female) {
+            if (selectedSex.contains("female")) selectedSex.remove("female");
+            else selectedSex.add("female");
+            updateSexFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_age_low) {
+            if (selectedAge.contains(1)) selectedAge.remove(Integer.valueOf(1));
+            else selectedAge.add(1);
+            updateAgeFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_age_high) {
+            if (selectedAge.contains(2)) selectedAge.remove(Integer.valueOf(2));
+            else selectedAge.add(2);
+            updateAgeFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_color_black) {
+            if (selectedColor.contains("đen")) selectedColor.remove("đen");
+            else selectedColor.add("đen");
+            updateColorFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_color_white) {
+            if (selectedColor.contains("trắng")) selectedColor.remove("trắng");
+            else selectedColor.add("trắng");
+            updateColorFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_color_gray) {
+            if (selectedColor.contains("xám")) selectedColor.remove("xám");
+            else selectedColor.add("xám");
+            updateColorFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_color_yellow) {
+            if (selectedColor.contains("vàng")) selectedColor.remove("vàng");
+            else selectedColor.add("vàng");
+            updateColorFilterButtons();
+        } else if (v.getId() == R.id.button_select_filter_color_brown) {
+            if (selectedColor.contains("nâu")) selectedColor.remove("nâu");
+            else selectedColor.add("nâu");
+            updateColorFilterButtons();
+        }
+    };
+
+    private void updateColorFilterButtons() {
+        if (selectedColor.contains("đen")) {
+            buttonColorBlack.setBackgroundColor(Color.BLACK);
+            buttonColorBlack.setTextColor(Color.WHITE);
+        } else {
+            buttonColorBlack.setBackgroundColor(Color.WHITE);
+            buttonColorBlack.setTextColor(Color.GRAY);
+        }
+        if (selectedColor.contains("trắng")) {
+            buttonColorWhite.setBackgroundColor(Color.BLACK);
+            buttonColorWhite.setTextColor(Color.WHITE);
+        } else {
+            buttonColorWhite.setBackgroundColor(Color.WHITE);
+            buttonColorWhite.setTextColor(Color.GRAY);
+        }
+        if (selectedColor.contains("xám")) {
+            buttonColorGray.setBackgroundColor(Color.BLACK);
+            buttonColorGray.setTextColor(Color.WHITE);
+        } else {
+            buttonColorGray.setBackgroundColor(Color.WHITE);
+            buttonColorGray.setTextColor(Color.GRAY);
+        }
+        if (selectedColor.contains("vàng")) {
+            buttonColorYellow.setBackgroundColor(Color.BLACK);
+            buttonColorYellow.setTextColor(Color.WHITE);
+        } else {
+            buttonColorYellow.setBackgroundColor(Color.WHITE);
+            buttonColorYellow.setTextColor(Color.GRAY);
+        }
+        if (selectedColor.contains("nâu")) {
+            buttonColorBrown.setBackgroundColor(Color.BLACK);
+            buttonColorBrown.setTextColor(Color.WHITE);
+        } else {
+            buttonColorBrown.setBackgroundColor(Color.WHITE);
+            buttonColorBrown.setTextColor(Color.GRAY);
+        }
+    }
+
+    private void updateAgeFilterButtons() {
+        if (selectedAge.contains(1)) {
+            buttonAgeLow.setBackgroundColor(Color.BLACK);
+            buttonAgeLow.setTextColor(Color.WHITE);
+        } else {
+            buttonAgeLow.setBackgroundColor(Color.WHITE);
+            buttonAgeLow.setTextColor(Color.GRAY);
+        }
+        if (selectedAge.contains(2)) {
+            buttonAgeHigh.setBackgroundColor(Color.BLACK);
+            buttonAgeHigh.setTextColor(Color.WHITE);
+        } else {
+            buttonAgeHigh.setBackgroundColor(Color.WHITE);
+            buttonAgeHigh.setTextColor(Color.GRAY);
+        }
+    }
+
+    void updateSexFilterButtons() {
+        if (selectedSex.contains("male")) {
+            buttonSexMale.setBackgroundColor(Color.BLACK);
+            buttonSexMale.setTextColor(Color.WHITE);
+        } else {
+            buttonSexMale.setBackgroundColor(Color.WHITE);
+            buttonSexMale.setTextColor(Color.GRAY);
+        }
+        if (selectedSex.contains("female")) {
+            buttonSexFemale.setBackgroundColor(Color.BLACK);
+            buttonSexFemale.setTextColor(Color.WHITE);
+        } else {
+            buttonSexFemale.setBackgroundColor(Color.WHITE);
+            buttonSexFemale.setTextColor(Color.GRAY);
+        }
+    }
+
+    private void hideFilterMenu() {
+        Log.d(TAG, "hide filter now");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(filterContainer, "translationX", 0);
+        animator.setDuration(500);
+        animator.start();
+    }
+
+    private void showFilterMenu() {
+        Log.d(TAG, "filter button clicked");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(filterContainer, "translationX", -filterContainer.getWidth());
+        animator.setDuration(500);
+        animator.start();
     }
 
     public void updateProgressBar() {
@@ -213,11 +403,7 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     public void updateCartButton() {
         try {
             if (buttonGoToCart != null && currentSyncedUser != null)
-                buttonGoToCart.setImageResource(
-                        currentSyncedUser.hasEmptyCart() ?
-                                R.drawable.cart_button_no_dot
-                                :
-                                R.drawable.cart_not_empty);
+                buttonGoToCart.setImageResource(currentSyncedUser.hasEmptyCart() ? R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
         } catch (Exception exception) {
             Log.d(TAG, exception.toString());
         }
@@ -242,6 +428,7 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         notifyAdapter();
         updateProgressBar();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -250,19 +437,19 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this.requireActivity(),new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+            ActivityCompat.requestPermissions(this.requireActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
         }
     }
 
 
     private ActivityResultLauncher<String> requestPermissionLauncher =
-        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                Toast.makeText(this.requireContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this.requireContext(),"Permission Denied. Feature is unavailable! ",Toast.LENGTH_SHORT).show();
-            }
-        });
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(this.requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this.requireContext(), "Permission Denied. Feature is unavailable! ", Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
 //    private void downloadModal(String input) {

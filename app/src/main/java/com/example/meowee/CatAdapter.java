@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
@@ -113,6 +114,30 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
             for (Cat cat : Cat.allCats) {
                 if (cat.hasNameSimilarTo(queryText))
                     this.cats.add(cat.deepCopy());
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterByOptions(ArrayList<String> selectedSex, ArrayList<Integer> selectedAge,
+                                Integer minPrice, Integer maxPrice, ArrayList<String> selectedColor) {
+        this.cats.clear();
+        for (Cat cat : Cat.allCats) {
+            String male = cat.getIsMale() ? "male" : "female";
+            boolean matchColor = false;
+            String[] colors = cat.getColor().replaceAll(" ", "").split(",");
+            for (String color : colors) {
+                if (selectedColor.contains(color)) {
+                    matchColor = true;
+                    break;
+                }
+            }
+            if ((selectedSex.isEmpty() || selectedSex.contains(male))
+                    && (selectedAge.isEmpty() || selectedAge.contains(cat.getAgeLevel()))
+                    && cat.hasPriceInRange(minPrice, maxPrice)
+                    && (selectedColor.isEmpty() || matchColor)) {
+                this.cats.add(cat.deepCopy());
             }
         }
         notifyDataSetChanged();

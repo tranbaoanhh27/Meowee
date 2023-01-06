@@ -82,4 +82,21 @@
     <string name="facebook_client_token">82090f47310a7ea79e386d6f07313649</string>
     <string name="error_occurred_pls_try_again_later">Đã có lỗi xảy ra, xin thông cảm và thử lại sau.</string>
     <string name="this_feature_is_being_developed">Tính năng này đang trong giai đoạn phát triển!</string>
+    <string name="filter_title">Bộ lọc sản phẩm</string>
+    <string name="sexFilterTitle">Giới tính</string>
+    <string name="male">Đực</string>
+    <string name="female">Cái</string>
+    <string name="colorFilterTitle">Màu lông</string>
+    <string name="black">Đen</string>
+    <string name="white">Trắng</string>
+    <string name="gray">Xám</string>
+    <string name="yellow">Vàng</string>
+    <string name="brown">Nâu</string>
+    <string name="ageFilterTitle">Độ tuổi</string>
+    <string name="children">Mèo con</string>
+    <string name="old_cat">Mèo trưởng thành</string>
+    <string name="priceFilterTitle">Giá</string>
+    <string name="minimumPrice">Tối thiểu</string>
+    <string name="maximumPrice">Tối đa</string>
+    <string name="reset">Đặt lại</string>
 </resources>
