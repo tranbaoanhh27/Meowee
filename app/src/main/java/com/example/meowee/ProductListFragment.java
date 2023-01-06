@@ -62,7 +62,7 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private ImageView micButton;
-
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 //    FirebaseTranslator englishGermanTranslator;
 
     public ProductListFragment() {
@@ -101,6 +101,16 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         if (getArguments() != null) {
             // TODO: Reload arguments from savedInstanceState
         }
+
+        requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(this.requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.requireContext(), "Permission Denied. Feature is unavailable! ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
         } else {
@@ -442,14 +452,14 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     }
 
 
-    private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    Toast.makeText(this.requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this.requireContext(), "Permission Denied. Feature is unavailable! ", Toast.LENGTH_SHORT).show();
-                }
-            });
+//    private ActivityResultLauncher<String> requestPermissionLauncher =
+//            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+//                if (isGranted) {
+//                    Toast.makeText(this.requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this.requireContext(), "Permission Denied. Feature is unavailable! ", Toast.LENGTH_SHORT).show();
+//                }
+//            });
 
 
 //    private void downloadModal(String input) {

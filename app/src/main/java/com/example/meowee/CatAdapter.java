@@ -147,7 +147,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> {
     public void filterByFavorite() {
         this.cats.clear();
         for (Cat cat : Cat.allCats) {
-            if (currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())))
+            if ((currentSyncedUser != null) && currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(cat.getName())))
                 this.cats.add(cat.deepCopy());
         }
         notifyDataSetChanged();
