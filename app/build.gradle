@@ -67,4 +67,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
     implementation 'com.facebook.android:facebook-share:latest.release'
+
+    implementation 'com.google.firebase:firebase-ml-natural-language:22.0.0'
+
+    implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.8'
 }
