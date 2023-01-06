@@ -4,7 +4,10 @@ package com.example.meowee;
 import static com.example.meowee.DatabaseHelper.initCatsDatabaseReference;
 import static com.example.meowee.DatabaseHelper.initCurrentUserDatabaseReference;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +15,8 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton buttonMap;
     private ImageButton buttonFavorite;
     private ImageButton buttonProfile;
+    private ImageButton buttonMic;
     private Fragment fragmentMap, fragmentProfile;
     private ProductListFragment fragmentHome;
     public static FavoritesFragment fragmentFavorites;
@@ -78,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             Intent cameraIntent = new Intent(MainActivity.this, CatClassifyActivity.class);
             startActivity(cameraIntent);
         });
-
         setUpDefaultFragment();
     }
 
@@ -186,4 +191,6 @@ public class MainActivity extends AppCompatActivity {
                 .replace(fragmentContainerResourceId, fragmentObject)
                 .commit();
     }
+
+
 }

@@ -3,21 +3,50 @@ package com.example.meowee;
 import static com.example.meowee.MainActivity.currentSyncedUser;
 import static com.example.meowee.Tools.showToast;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 public class ProductListFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener{
 
@@ -30,10 +59,33 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     private RecyclerView recyclerView;
     ProgressBar progressBar;
     private CatAdapter adapter;
+    public static final Integer RecordAudioRequestCode = 1;
+    private SpeechRecognizer speechRecognizer;
+    private ImageView micButton;
 
+    FirebaseTranslator englishGermanTranslator;
     public ProductListFragment() {
         // Required empty public constructor
     }
+    ActivityResultLauncher<Intent> someActivityResultLauncher  = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+
+                        // There are no request codes
+                        Intent data = result.getData();
+                        ArrayList<String> res = data.getStringArrayListExtra(
+                                RecognizerIntent.EXTRA_RESULTS);
+
+                        searchView.setQuery(
+                                Objects.requireNonNull(res).get(0),true);
+//                        downloadModal(Objects.requireNonNull(res).get(0));
+
+                    }
+                }
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,8 +93,30 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         if (getArguments() != null) {
             // TODO: Reload arguments from savedInstanceState
         }
+        if(ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            checkPermission();
+        }
+        else{
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+        // Create an English-German translator:
+//        FirebaseTranslatorOptions options =
+//                new FirebaseTranslatorOptions.Builder()
+//                        // below line we are specifying our source language.
+//                        .setSourceLanguage(FirebaseTranslateLanguage.EN)
+//                        // in below line we are displaying our target language.
+//                        .setTargetLanguage(FirebaseTranslateLanguage.VI)
+//                        // after that we are building our options.
+//                        .build();
+//        // below line is to get instance
+//        // for firebase natural language.
+//        englishGermanTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options);
+
+
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -68,6 +142,30 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 
         buttonFilter = view.findViewById(R.id.imagebutton_filter);
         buttonFilter.setOnClickListener(v -> showToast(getActivity(), R.string.this_feature_is_being_developed));
+
+        micButton = view.findViewById(R.id.img_mic);
+
+        micButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent
+                        = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                        Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    someActivityResultLauncher.launch(intent);
+
+                } catch (Exception e) {
+                    String appPackageName = "com.google.android.googlequicksearchbox";
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+        });
 
         return view;
     }
@@ -144,4 +242,66 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         notifyAdapter();
         updateProgressBar();
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        speechRecognizer.destroy();
+    }
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this.requireActivity(),new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+        }
+    }
+
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                Toast.makeText(this.requireContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this.requireContext(),"Permission Denied. Feature is unavailable! ",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+//    private void downloadModal(String input) {
+//        // below line is use to download the modal which
+//        // we will require to translate in german language
+//        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder().requireWifi().build();
+//
+//        // below line is use to download our modal.
+//        englishGermanTranslator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//
+////                // this method is called when modal is downloaded successfully.
+////                Toast.makeText(getActivity(), "Please wait language modal is being downloaded.", Toast.LENGTH_SHORT).show();
+//
+//                // calling method to translate our entered text.
+//                translateLanguage(input);
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getActivity(), "Fail to download modal", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    private void translateLanguage(String input) {
+//        englishGermanTranslator.translate(input).addOnSuccessListener(new OnSuccessListener<String>() {
+//            @Override
+//            public void onSuccess(String s) {
+//                searchView.setQuery(s, true);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getActivity(), "Fail to translate", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
 }
