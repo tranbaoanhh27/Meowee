@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -412,8 +414,23 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
 
     public void updateCartButton() {
         try {
-            if (buttonGoToCart != null && currentSyncedUser != null)
-                buttonGoToCart.setImageResource(currentSyncedUser.hasEmptyCart() ? R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
+            if (buttonGoToCart != null && currentSyncedUser != null);
+            if(getResources().getBoolean(R.bool.isDarkMode)) {
+                if (currentSyncedUser.hasEmptyCart()) {
+                    buttonGoToCart.setImageResource(R.drawable.cart_button_no_dot_black);
+                }
+                else {
+                    buttonGoToCart.setImageResource(R.drawable.cart_not_empty_black);
+                }
+            }
+            else {
+                if (currentSyncedUser.hasEmptyCart()) {
+                    buttonGoToCart.setImageResource(R.drawable.cart_button_no_dot_white);
+                }
+                else {
+                    buttonGoToCart.setImageResource(R.drawable.cart_not_empty_white);
+                }
+            }
         } catch (Exception exception) {
             Log.d(TAG, exception.toString());
         }

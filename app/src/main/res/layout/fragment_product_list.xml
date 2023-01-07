@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorPrimary"
     tools:context=".ProductListFragment">
 
     <ImageView
+        style="@style/logo"
         android:id="@+id/imageview_home_app_logo"
         android:layout_width="180dp"
         android:layout_height="38dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:contentDescription="@string/app_logo"
-        android:src="@drawable/app_logo_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/hi"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/imageview_home_app_logo"
@@ -36,12 +36,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/let_see_what_we_have"
-        android:textColor="@color/gray"
+        android:textColor="?attr/colorPrimaryVariant"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/textview_greeting"
         app:layout_constraintTop_toBottomOf="@id/textview_greeting" />
 
     <ImageButton
+        style="@style/cartBtn"
         android:id="@+id/imagebutton_home_mycart"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -49,7 +50,6 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/cart"
         android:scaleType="fitXY"
-        android:src="@drawable/cart_button_no_dot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textview_greeting" />
 
@@ -83,6 +83,7 @@
 
 
     <ImageButton
+        style="@style/filter"
         android:id="@+id/imagebutton_filter"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -91,7 +92,6 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/filter"
         android:scaleType="fitXY"
-        android:src="@drawable/filter_icon"
         app:layout_constraintBottom_toBottomOf="@id/searchview_home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/searchview_home"
@@ -139,6 +139,7 @@
                 android:text="@string/filter_title"
                 android:textSize="28sp"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -150,6 +151,7 @@
                 android:text="@string/sexFilterTitle"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="@id/title_filter_menu"
                 app:layout_constraintTop_toBottomOf="@id/title_filter_menu" />
 
@@ -185,6 +187,7 @@
                 android:text="@string/colorFilterTitle"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="@id/button_select_filter_sex_male"
                 app:layout_constraintTop_toBottomOf="@id/button_select_filter_sex_male" />
 
@@ -259,6 +262,7 @@
                 android:text="@string/ageFilterTitle"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="@id/title_filter_menu"
                 app:layout_constraintTop_toBottomOf="@id/button_select_filter_color_yellow" />
 
@@ -294,6 +298,7 @@
                 android:text="@string/priceFilterTitle"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="@id/title_filter_menu"
                 app:layout_constraintTop_toBottomOf="@id/button_select_filter_age_low" />
 

@@ -2,15 +2,65 @@
     <!-- Base application theme. -->
     <style name="Theme.Meowee" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/light_gray</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">#d8d8d8</item>
+        <item name="colorSecondaryVariant">#e6e6e6</item>
+        <item name="colorOnSecondary">@color/gray</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@android:color/background_dark</item>
         <!-- Customize your theme here. -->
+    </style>
+    
+    <bool name="isDarkMode">false</bool>
+    
+    <declare-styleable name="isDarkMode">
+        <attr name="colorPrimary" format="color"/>
+    </declare-styleable>
+
+    <style name="logo">
+        <item name="android:src">@drawable/app_logo_black</item>
+    </style>
+
+    <style name="addBtn">
+        <item name="android:src">@drawable/add_button_white</item>
+    </style>
+
+    <style name="cameraBtn">
+        <item name="android:src">@drawable/camera_white</item>
+    </style>
+
+    <style name="cartBtn">
+        <item name="android:src">@drawable/cart_button_no_dot_white</item>
+    </style>
+
+    <style name="notMTCartBtn">
+        <item name="android:src">@drawable/cart_not_empty_white</item>
+    </style>
+
+    <style name="favoriteBtnSelected">
+        <item name="android:src">@drawable/favorite_button_selected_white</item>
+    </style>
+
+    <style name="favoriteBtn">
+        <item name="android:src">@drawable/favorite_button_unselected_white</item>
+    </style>
+
+    <style name="filter">
+        <item name="android:src">@drawable/filter_icon_white</item>
+    </style>
+
+    <style name="minus">
+        <item name="android:src">@drawable/minus_button_white</item>
+    </style>
+
+    <style name="search">
+        <item name="android:src">@drawable/search_icon_white</item>
+    </style>
+
+    <style name="up">
+        <item name="android:src">@drawable/up_button_white</item>
     </style>
 </resources>

@@ -212,7 +212,8 @@ public class MapFragment extends Fragment {
             int h = Integer.parseInt((new SimpleDateFormat("HH")).
                     format(Calendar.getInstance().getTime()));
 
-            if (h >= 18 || h <= 6) {
+//            if (h >= 18 || h <= 6) {
+            if (getResources().getBoolean(R.bool.isDarkMode)) {
                 GGMAP.setMapStyle(MapStyleOptions.loadRawResourceStyle(
                         getContext(), R.raw.style_json_night));
             }
@@ -330,7 +331,7 @@ public class MapFragment extends Fragment {
         }
         else {
             listBranchLinearLayout.setVisibility(View.GONE);
-            listBranchImageButton.setImageResource(R.drawable.ic_list_branch);
+            listBranchImageButton.setImageResource(R.drawable.ic_baseline_menu_24);
             isBackButton = true;
         }
     }

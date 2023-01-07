@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorPrimary"
     tools:context=".MyCartActivity">
 
     <ImageButton
+        style="@style/up"
         android:id="@+id/button_cart_back"
-        android:src="@drawable/up_button"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         android:layout_width="40dp"
@@ -22,7 +22,7 @@
         android:id="@+id/textiew_cart_title"
         android:text="Giỏ hàng của tôi"
         android:textSize="24sp"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/button_cart_back"
@@ -48,7 +48,7 @@
     <TextView
         android:id="@+id/textview_cart_total_label"
         android:text="Tổng tiền:"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
     <TextView
         android:id="@+id/textview_cart_total"
         android:text="00.000.000đ"
-        android:textColor="#003471"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
     <TextView
         android:id="@+id/textview_cart_deliver_fee_label"
         android:text="Phí vận chuyển:"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
     <TextView
         android:id="@+id/textview_cart_deliver_fee"
         android:text="000.000đ"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
     <TextView
         android:id="@+id/textview_cart_cat_value_label"
         android:text="Tiền hàng:"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
     <TextView
         android:id="@+id/textview_cart_cat_value"
         android:text="00.000.000đ"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"

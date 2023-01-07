@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Meowee" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/gray</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#4f4d4d</item>
+        <item name="colorSecondaryVariant">#292828</item>
+        <item name="colorOnSecondary">#e3dede</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/background_dark</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <bool name="isDarkMode">true</bool>
+
+    <declare-styleable name="isDarkMode">
+        <attr name="colorPrimary" format="color"/>
+    </declare-styleable>
+
+    <style name="logo">
+        <item name="android:src">@drawable/app_logo_white</item>
+    </style>
+
+    <style name="addBtn">
+        <item name="android:src">@drawable/add_button_black</item>
+    </style>
+
+    <style name="cameraBtn">
+        <item name="android:src">@drawable/camera_black</item>
+    </style>
+
+    <style name="cartBtn">
+        <item name="android:src">@drawable/cart_button_no_dot_black</item>
+    </style>
+
+    <style name="notMTCartBtn">
+        <item name="android:src">@drawable/cart_not_empty_black</item>
+    </style>
+
+    <style name="favoriteBtnSelected">
+        <item name="android:src">@drawable/favorite_button_selected_black</item>
+    </style>
+
+    <style name="favoriteBtn">
+        <item name="android:src">@drawable/favorite_button_unselected_black</item>
+    </style>
+
+    <style name="filter">
+        <item name="android:src">@drawable/filter_icon_black</item>
+    </style>
+
+    <style name="minus">
+        <item name="android:src">@drawable/minus_button_black</item>
+    </style>
+
+    <style name="search">
+        <item name="android:src">@drawable/search_icon_black</item>
+    </style>
+
+    <style name="up">
+        <item name="android:src">@drawable/up_button_black</item>
+    </style>
+
+
+</resources>

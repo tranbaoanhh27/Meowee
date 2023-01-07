@@ -2,6 +2,7 @@ package com.example.meowee;
 
 import static com.example.meowee.MainActivity.currentSyncedUser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -245,16 +246,26 @@ public class CatClassifyActivity extends AppCompatActivity implements UserDataCh
         updateCartButton();
     }
 
+
     private void updateCartButton() {
         if (imgCart == null)
             imgCart = findViewById(R.id.imgview_cart);
-        if (currentSyncedUser != null)
-            imgCart.setImageResource(
-                    currentSyncedUser.hasEmptyCart() ?
-                            R.drawable.cart_button_no_dot
-                            :
-                            R.drawable.cart_not_empty
-            );
+        if(getResources().getBoolean(R.bool.isDarkMode)) {
+            if (currentSyncedUser.hasEmptyCart()) {
+                imgCart.setImageResource(R.drawable.cart_button_no_dot_black);
+            }
+            else {
+                imgCart.setImageResource(R.drawable.cart_not_empty_black);
+            }
+        }
+        else {
+            if (currentSyncedUser.hasEmptyCart()) {
+                imgCart.setImageResource(R.drawable.cart_button_no_dot_white);
+            }
+            else {
+                imgCart.setImageResource(R.drawable.cart_not_empty_white);
+            }
+        }
     }
 
     private void updateBuyNowButton() {

@@ -4,27 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="?attr/colorPrimary"
     tools:context=".CatClassifyActivity">
 
     <ImageView
+        style="@style/up"
         android:id="@+id/imgview_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:scaleType="fitXY"
         android:layout_margin="20dp"
-        android:src="@drawable/up_button"
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        style="@style/cartBtn"
         android:id="@+id/imgview_cart"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="20dp"
         android:scaleType="fitXY"
-        android:src="@drawable/cart_button_no_dot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,6 +35,7 @@
         android:fontFamily="sans-serif"
         android:textStyle="bold"
         android:textSize="24sp"
+        android:textColor="?attr/colorOnPrimary"
         android:text="@string/tracuu"
         app:layout_constraintBottom_toBottomOf="@id/imgview_back"
         app:layout_constraintEnd_toStartOf="@+id/imgview_cart"
