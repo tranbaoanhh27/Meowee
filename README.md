@@ -1,4 +1,4 @@
-# Library Management app
+# Meowee - Cat Store Online App
 <!-- <p align="center">
   <img src="images/SMTP-IMAP.png" alt="Remote Control" style="border-radius:50%"/>
 </p> -->
