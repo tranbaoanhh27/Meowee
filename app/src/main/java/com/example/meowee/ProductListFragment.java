@@ -3,21 +3,41 @@ package com.example.meowee;
 import static com.example.meowee.MainActivity.currentSyncedUser;
 import static com.example.meowee.Tools.showToast;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 public class ProductListFragment extends Fragment implements UserDataChangedListener, CatsDataChangedListener{
 
@@ -30,10 +50,30 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
     private RecyclerView recyclerView;
     ProgressBar progressBar;
     private CatAdapter adapter;
+    public static final Integer RecordAudioRequestCode = 1;
+    private SpeechRecognizer speechRecognizer;
+    private ImageView micButton;
 
     public ProductListFragment() {
         // Required empty public constructor
     }
+    ActivityResultLauncher<Intent> someActivityResultLauncher  = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+
+                        // There are no request codes
+                        Intent data = result.getData();
+                        ArrayList<String> res = data.getStringArrayListExtra(
+                                RecognizerIntent.EXTRA_RESULTS);
+                        searchView.setQuery(
+                                Objects.requireNonNull(res).get(0),false);
+
+                    }
+                }
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,8 +81,16 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         if (getArguments() != null) {
             // TODO: Reload arguments from savedInstanceState
         }
+        if(ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            checkPermission();
+        }
+        else{
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -69,9 +117,121 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         buttonFilter = view.findViewById(R.id.imagebutton_filter);
         buttonFilter.setOnClickListener(v -> showToast(getActivity(), R.string.this_feature_is_being_developed));
 
+//        editText = findViewById(R.id.text);
+        micButton = view.findViewById(R.id.img_mic);
+//        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getContext());
+//
+//        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//
+//        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+//            @Override
+//            public void onReadyForSpeech(Bundle bundle) {
+//
+//            }
+//
+//            @Override
+//            public void onBeginningOfSpeech() {
+////                editText.setText("");
+////                editText.setHint("Listening...");
+//                searchView.setQuery("sfs", false);
+//                searchView.setQueryHint("Listening...");
+//            }
+//
+//            @Override
+//            public void onRmsChanged(float v) {
+//
+//            }
+//
+//            @Override
+//            public void onBufferReceived(byte[] bytes) {
+//
+//            }
+//
+//            @Override
+//            public void onEndOfSpeech() {
+//
+//            }
+//
+//            @Override
+//            public void onError(int i) {
+//
+//            }
+//
+//            @Override
+//            public void onResults(Bundle bundle) {
+//                micButton.setImageResource(R.drawable.ic_baseline_mic);
+//                ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//
+////                editText.setText(data.get(0));
+//                searchView.setQuery((data.get(0)), false);
+//            }
+//
+//            @Override
+//            public void onPartialResults(Bundle bundle) {
+//
+//            }
+//
+//            @Override
+//            public void onEvent(int i, Bundle bundle) {
+//
+//            }
+//        });
+//
+//      micButton.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+//                    speechRecognizer.stopListening();
+//                }
+//                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+//
+//                    micButton.setImageResource(R.drawable.ic_baseline_mic_24);
+//                    speechRecognizer.startListening(speechRecognizerIntent);
+//                }
+//                return false;
+//            }
+//        });
+        micButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent
+                        = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                        Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    someActivityResultLauncher.launch(intent);
+
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
         return view;
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode,
+//                                    @Nullable Intent data)
+//    {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                ArrayList<String> result = data.getStringArrayListExtra(
+//                        RecognizerIntent.EXTRA_RESULTS);
+//                tv_Speech_to_text.setText(
+//                        Objects.requireNonNull(result).get(0));
+//            }
+//        }
+//    }
     public void updateProgressBar() {
         try {
             progressBar.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
@@ -144,4 +304,32 @@ public class ProductListFragment extends Fragment implements UserDataChangedList
         notifyAdapter();
         updateProgressBar();
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        speechRecognizer.destroy();
+    }
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this.requireActivity(),new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+        }
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.registerForActivityResult(requestCode, permissions, grantResults);
+//        if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
+//            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+//                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+//        }
+//    }
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                Toast.makeText(this.requireContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this.requireContext(),"Permission Denied. Feature is unavailable! ",Toast.LENGTH_SHORT).show();
+            }
+        });
 }
