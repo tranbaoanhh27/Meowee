@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fitsSystemWindows="true"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:visibility="gone" >
 
         <TextView
@@ -40,12 +40,13 @@
             android:text="@string/list_branch_heading"
             android:textAlignment="center"
             android:textSize="30sp"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_marginTop="70dp"
             android:textStyle="bold" />
 
         <ImageView
+            style="@style/logo"
             android:id="@+id/list_branch_logo"
-            android:src="@drawable/app_logo_black"
             android:layout_width="180dp"
             android:layout_height="38dp"
             android:contentDescription="@string/app_logo"
@@ -62,7 +63,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/list_branch_ImageButton"
-        android:src="@drawable/ic_list_branch"
+        android:src="@drawable/ic_baseline_menu_24"
         android:background="@drawable/square_with_curved_edges_button"
         android:scaleType="fitXY"
         android:layout_width="50dp"

@@ -23,6 +23,7 @@
         android:paddingBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
@@ -51,8 +52,8 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageButton
+            style="@style/cameraBtn"
             android:id="@+id/bottomNavBarButtonCamera"
-            android:src="@drawable/camera"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_width="50dp"

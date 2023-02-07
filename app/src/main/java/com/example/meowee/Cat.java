@@ -166,4 +166,9 @@ public class Cat implements Serializable {
             return "N/A";
         }
     }
+
+    @Exclude
+    public boolean hasPriceInRange(Integer min, Integer max) {
+        return (min == null || price >= min) && (max == null || price <= max);
+    }
 }

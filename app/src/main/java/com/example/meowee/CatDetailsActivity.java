@@ -125,8 +125,22 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
 
     private void updateButtonGoToCart() {
         try {
-            buttonGoToCart.setImageResource(currentSyncedUser.hasEmptyCart() ?
-                    R.drawable.cart_button_no_dot : R.drawable.cart_not_empty);
+            if(getResources().getBoolean(R.bool.isDarkMode)) {
+                if (currentSyncedUser.hasEmptyCart()) {
+                    buttonGoToCart.setImageResource(R.drawable.cart_button_no_dot_black);
+                }
+                else {
+                    buttonGoToCart.setImageResource(R.drawable.cart_not_empty_black);
+                }
+            }
+            else {
+                if (currentSyncedUser.hasEmptyCart()) {
+                    buttonGoToCart.setImageResource(R.drawable.cart_button_no_dot_white);
+                }
+                else {
+                    buttonGoToCart.setImageResource(R.drawable.cart_not_empty_white);
+                }
+            }
         } catch (Exception e) {
             Log.d(TAG, e.toString());
             e.printStackTrace();
@@ -144,10 +158,22 @@ public class CatDetailsActivity extends AppCompatActivity implements UserDataCha
 
     private void updateAddToFavoriteButton() {
         try {
-            buttonAddToFavorite.setImageResource(
-                    currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(catName)) ?
-                            R.drawable.favorite_button_selected : R.drawable.favorite_button_unselected
-            );
+            if(getResources().getBoolean(R.bool.isDarkMode)) {
+                if (currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(catName))) {
+                    buttonAddToFavorite.setImageResource(R.drawable.favorite_button_selected_black);
+                }
+                else {
+                    buttonAddToFavorite.setImageResource(R.drawable.favorite_button_unselected_black);
+                }
+            }
+            else {
+                if (currentSyncedUser.likeCatWithId(Cat.idOfCatWithName(catName))) {
+                    buttonAddToFavorite.setImageResource(R.drawable.favorite_button_selected_white);
+                }
+                else {
+                    buttonAddToFavorite.setImageResource(R.drawable.favorite_button_unselected_white);
+                }
+            }
         } catch (Exception e) {
             Log.d(TAG, e.toString());
             e.printStackTrace();

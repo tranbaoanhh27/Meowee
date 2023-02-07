@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorPrimary"
     tools:context=".CatDetailsActivity">
 
     <ImageView
@@ -29,7 +29,7 @@
             android:id="@+id/textview_cat_details_name"
             android:text="@string/this_is_cat_name"
             android:textSize="32sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -38,8 +38,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
+            style="@style/minus"
             android:id="@+id/button_cat_details_minus"
-            android:src="@drawable/minus_button"
             android:scaleType="fitXY"
             android:background="@android:color/transparent"
             android:layout_width="30dp"
@@ -53,7 +53,7 @@
             android:id="@+id/textview_cat_details_quantity"
             android:text="1"
             android:textSize="24sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -63,8 +63,8 @@
             tools:ignore="HardcodedText" />
 
         <ImageButton
+            style="@style/addBtn"
             android:id="@+id/button_cat_details_add"
-            android:src="@drawable/add_button"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_width="30dp"
@@ -79,7 +79,7 @@
             android:id="@+id/textview_cat_details_total_price"
             android:text="1.000.000 đ"
             android:textSize="24sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/button_cat_details_add"
@@ -92,7 +92,7 @@
             android:id="@+id/textview_cat_details_age_label"
             android:text="@string/age"
             android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -103,7 +103,7 @@
             android:id="@+id/textview_cat_details_age"
             android:text="Mèo con (dưới 3 tháng tuổi)"
             android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -116,7 +116,7 @@
         <TextView
             android:id="@+id/textview_cat_details_color_label"
             android:text="@string/color"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
             android:id="@+id/textview_cat_details_color"
             android:text="Xám, đen xám (ngắn)"
             android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -140,7 +140,7 @@
         <TextView
             android:id="@+id/textview_cat_details_sex_label"
             android:text="@string/sex"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
             android:id="@+id/textview_cat_details_sex"
             android:text="Mèo đực"
             android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -164,7 +164,7 @@
         <TextView
             android:id="@+id/textview_cat_details_more_label"
             android:text="@string/more_info"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
             android:id="@+id/textview_cat_details_more"
             android:text="Đã biết ăn cơm hay hạt, biết đi vệ sinh trong khay cát, đã triệt sản."
             android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textColor="?attr/colorPrimaryVariant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -186,8 +186,8 @@
             tools:ignore="HardcodedText" />
         
         <ImageButton
+            style="@style/favoriteBtn"
             android:id="@+id/button_cat_details_favorite"
-            android:src="@drawable/favorite_button_unselected"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_width="45dp"
@@ -228,8 +228,8 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     
     <ImageButton
+        style="@style/notMTCartBtn"
         android:id="@+id/button_cat_details_go_to_cart"
-        android:src="@drawable/cart_button_no_dot"
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
         android:layout_width="40dp"
@@ -239,8 +239,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
+        style="@style/up"
         android:id="@+id/button_cat_details_back"
-        android:src="@drawable/up_button"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         android:layout_width="40dp"
