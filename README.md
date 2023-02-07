@@ -7,7 +7,7 @@
 <ul style="list-style-type: none">
     <li><a href="#about">About us</a></li>
     <li><a href="#set_up">Setup</a></li>
-    <li><a href="#demo">UI and Functions</a></li>
+    <li><a href="#demo">Demo</a></li>
 </ul>
 
 <h5 id="about"></h5>
